@@ -18,7 +18,7 @@ static void consputc(int);
 
 static int panicked = 0;
 
-char* last_commands[15];        
+char last_commands[15][30];        
 int commands_size[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};         
 int filled_commands[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};          
 int command_pointer = 0;                                // pointer of where we should add commands
@@ -196,88 +196,127 @@ struct {
 
 
 // added functions by Alireza :
-// void delete_numbers_in_current_line(){
-//   char temp_buff[100];
-//   int pointer = 0;
-//   for(int i = 0 ; i < input.e ; i++){
-//     char temp = input.buf[i];
-//     if(!(temp >= 48 && temp <= 57)){
-//       temp_buff[pointer] = temp;
-//       pointer++;
-//     }
-//     consputc(BACKSPACE);
-//   }
-//   input.e = 0;
-//   for(int i = 0 ; i < pointer ; i++){
-//     input.buf[i] = temp_buff[i];
-//     consputc(temp_buff[i]);
-//     input.e++;
-//   }
-//   // memset(temp_buff , '\0' , INPUT_BUF);
-// }
+void delete_numbers_in_current_line(){
+  char temp_buff[100];
+  int pointer = 0;
+  for(int i = input.w ; i < input.e ; i++){
+    char temp = input.buf[i];
+    if(!(temp >= 48 && temp <= 57)){
+      temp_buff[pointer] = temp;
+      pointer++;
+    }
+    input.buf[i] = 0;
+    consputc(BACKSPACE);
+  }
+  input.e = input.w;
+  for(int i = 0 ; i < pointer ; i++){
+    input.buf[input.e] = temp_buff[i];
+    consputc(temp_buff[i]);
+    input.e++;
+  }
+}
 
-// void reverse_row(){
-//   char temp_buff[100];
-//   for(int i = 0 ; i < input.e ; i++){
-//     char temp = input.buf[input.e - i - 1];
-//     temp_buff[i] = temp;
-//     consputc(BACKSPACE);
-//   }
-//   int buff_size = input.e;
-//   input.e = 0;
-//   for(int i = 0 ; i < buff_size ; i++){
-//     input.buf[i] = temp_buff[i];
-//     consputc(temp_buff[i]);
-//     input.e++;
-//   }
-//   // memset(temp_buff , '\0' , INPUT_BUF);
-// }
 
-// void save_command(char buffer[] , int buffer_size){
-//   last_commands[command_pointer % 15] = buffer;
-//   commands_size[command_pointer % 15] = buffer_size;
-//   command_pointer += 1;
-// }
+void reverse_row(){
+  char temp_buff[100];
+  int counter = 0;
+  for(int i = input.w ; i < input.e ; i++){
+    char temp = input.buf[i];
+    temp_buff[counter] = temp;
+    counter++;
+    input.buf[i] = 0;
+    consputc(BACKSPACE);
+  }
 
-// void recommend_command(){
-//   char current_buff[100];
-//   for(int i = 0 ; i < input.e ; i++){
-//     current_buff[i] = input.buf[i];
-//     consputc(BACKSPACE);
-//   }
-//   int current_buff_size = input.e;
-//   input.e = 0;
-//   int recommended_successfully = 0;
-//   int i; int j;
-//   for(i = 0; i < command_pointer ; i++){
-//     if(current_buff_size > commands_size[i])
-//       break;
-//     for(j = 0 ; j < current_buff_size ; j++){
-//       if(current_buff[j] == last_commands[i][j]){
-//         if(j == current_buff_size - 1){
-//           recommended_successfully = 1;
-//           break;
-//         }
-//       }
-//       else
-//         break;
-//     }
-//   }
-//   if(recommended_successfully){
-//     for(int x = 0 ; x < commands_size[i] ; x++){
-//       input.buf[x] = last_commands[i][x];
-//       consputc(input.buf[x]);
-//       input.e++;
-//     }
-//   }
-//   else{
-//     for(int x = 0 ; x < current_buff_size ; x++){
-//       input.buf[x] = current_buff[x];
-//       consputc(input.buf[x]);
-//       input.e++;
-//     }
-//   }
-// }
+  input.e = input.w;
+  for(int i = counter - 1 ; i >= 0 ; i--){
+    input.buf[input.e] = temp_buff[i];
+    consputc(temp_buff[i]);
+    input.e++;
+  }
+}
+
+void save_command(char buffer[] , int buffer_size){
+  int counter = 0;
+  for(int i = input.w ; i < input.e ; i++){
+    last_commands[command_pointer %15][counter] = buffer[i];
+    counter++;
+  }
+  commands_size[command_pointer % 15] = buffer_size - 1;
+  command_pointer += 1;
+}
+
+void clear_buff(int buff_size){
+  memset(input.buf , 0 , buff_size);
+  input.e = 0;
+  input.w = 0;
+  input.r = 0;
+}
+
+void recommend_command(){
+  char current_buff[100];
+  int counter = 0;
+  for(int i = input.w ; i < input.e ; i++){
+    current_buff[counter] = input.buf[i];
+    input.buf[i] = 0;
+    consputc(BACKSPACE);
+    counter++;
+  }
+  int current_buff_size = input.e - input.w;
+  input.e = input.w;
+  int recommended_successfully = 0;
+  int i; int j;
+  for(i = (command_pointer % 15) - 1; i >= 0 ; i--){
+    if(current_buff_size >= commands_size[i]){
+      break;
+    }
+    for(j = 0 ; j < current_buff_size ; j++){
+      if(current_buff[j] == last_commands[i][j]){
+        if(j == current_buff_size - 1){
+          recommended_successfully = 1;
+          break;
+        }
+      }
+      else
+        break;
+    }
+    if(recommended_successfully)
+      break;
+  }
+  if(command_pointer >= 15 && recommended_successfully == 0){
+    for(i = 14; i >= (command_pointer % 15) ; i--){
+    if(current_buff_size >= commands_size[i]){
+      break;
+    }
+    for(j = 0 ; j < current_buff_size ; j++){
+      if(current_buff[j] == last_commands[i][j]){
+        if(j == current_buff_size - 1){
+          recommended_successfully = 1;
+          break;
+        }
+      }
+      else
+        break;
+    }
+    if(recommended_successfully)
+      break;
+  }
+  }
+  if(recommended_successfully){
+    for(int x = 0 ; x < commands_size[i] ; x++){
+      input.buf[input.e] = last_commands[i][x];
+      consputc(last_commands[i][x]);
+      input.e++;
+    }
+  }
+  else{
+    for(int x = 0 ; x < current_buff_size ; x++){
+      input.buf[input.e] = current_buff[x];
+      consputc(current_buff[x]);
+      input.e++;
+    }
+  }
+}
 
 
 // end added functions
@@ -297,12 +336,8 @@ consoleintr(int (*getc)(void))
     case C('R'):
       reverse_row();
       break;
-    case C('Q'):
+    case '\t': // case '\x09':
       recommend_command();
-      break;
-    case C('A'):
-      char temp = '0' + commands_size[0];
-      consputc(temp);
       break;
     case C('P'):  // Process listing.
       // procdump() locks cons.lock indirectly; invoke later
@@ -327,8 +362,8 @@ consoleintr(int (*getc)(void))
         input.buf[input.e++ % INPUT_BUF] = c;
         consputc(c);
         if(c == '\n' || c == C('D') || input.e == input.r+INPUT_BUF){
-          // int buff_size1 = input.e - 1;
-          // save_command(input.buf , buff_size1);
+          int buff_size1 = input.e - input.w;
+          save_command(input.buf , buff_size1);
           input.w = input.e;
           wakeup(&input.r);
         }

@@ -20,7 +20,6 @@ static int panicked = 0;
 
 char last_commands[15][30];                                           // previous entered commands
 int commands_size[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};              // size of each command
-int filled_commands[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};            
 int command_pointer = 0;                                              // pointer of where we should add commands
 
 static struct {
@@ -194,8 +193,7 @@ struct {
 #define C(x)  ((x)-'@')  // Control-x
 
 
-
-// added functions by Alireza :
+// added functions
 void delete_numbers_in_current_line(){
   char temp_buff[100];
   int pointer = 0;
@@ -246,12 +244,6 @@ void save_command(char buffer[] , int buffer_size){
   command_pointer += 1;
 }
 
-void clear_buff(int buff_size){
-  memset(input.buf , 0 , buff_size);
-  input.e = 0;
-  input.w = 0;
-  input.r = 0;
-}
 
 void recommend_command(){
   char current_buff[100];

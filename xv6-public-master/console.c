@@ -18,10 +18,10 @@ static void consputc(int);
 
 static int panicked = 0;
 
-char last_commands[15][30];        
-int commands_size[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};         
-int filled_commands[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};          
-int command_pointer = 0;                                // pointer of where we should add commands
+char last_commands[15][30];                                           // previous entered commands
+int commands_size[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};              // size of each command
+int filled_commands[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};            
+int command_pointer = 0;                                              // pointer of where we should add commands
 
 static struct {
   struct spinlock lock;
@@ -199,8 +199,8 @@ struct {
 void delete_numbers_in_current_line(){
   char temp_buff[100];
   int pointer = 0;
-  for(int i = input.w ; i < input.e ; i++){
-    char temp = input.buf[i];
+  for(int i = input.w ; i < input.e ; i++){                       // read last command from buffer and omit numbers, then save it into ((temp_buff))
+    char temp = input.buf[i];                       
     if(!(temp >= 48 && temp <= 57)){
       temp_buff[pointer] = temp;
       pointer++;
@@ -210,7 +210,7 @@ void delete_numbers_in_current_line(){
   }
   input.e = input.w;
   for(int i = 0 ; i < pointer ; i++){
-    input.buf[input.e] = temp_buff[i];
+    input.buf[input.e] = temp_buff[i];                            // put temp_buff in buffer and print it on the console
     consputc(temp_buff[i]);
     input.e++;
   }
@@ -220,7 +220,7 @@ void delete_numbers_in_current_line(){
 void reverse_row(){
   char temp_buff[100];
   int counter = 0;
-  for(int i = input.w ; i < input.e ; i++){
+  for(int i = input.w ; i < input.e ; i++){                         // read last command from buffer and save it into ((temp_buff))
     char temp = input.buf[i];
     temp_buff[counter] = temp;
     counter++;
@@ -229,14 +229,14 @@ void reverse_row(){
   }
 
   input.e = input.w;
-  for(int i = counter - 1 ; i >= 0 ; i--){
+  for(int i = counter - 1 ; i >= 0 ; i--){                          // put temp_buff reversly in buffer and print it on the console
     input.buf[input.e] = temp_buff[i];
     consputc(temp_buff[i]);
     input.e++;
   }
 }
 
-void save_command(char buffer[] , int buffer_size){
+void save_command(char buffer[] , int buffer_size){                 
   int counter = 0;
   for(int i = input.w ; i < input.e ; i++){
     last_commands[command_pointer %15][counter] = buffer[i];

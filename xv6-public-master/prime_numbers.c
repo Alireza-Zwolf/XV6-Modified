@@ -48,7 +48,7 @@ int find_prime_numbers(int first, int last, int *res)
         last = temp;
     }
     int flag;
-    while (first < last)
+    while (first < last && number_of_numbers <100)
     {
         flag = 0;
 

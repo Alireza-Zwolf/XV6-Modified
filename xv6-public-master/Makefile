@@ -182,6 +182,8 @@ UPROGS=\
 	_zombie\
 	_prime_numbers\
 	_fork_descendants\
+	_find_largest_prime_factor\
+
 	
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

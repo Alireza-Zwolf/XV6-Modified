@@ -104,6 +104,7 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_get_parent_pid(void);
+extern int sys_find_largest_prime_factor(void);
 
 
 static int (*syscalls[])(void) = {
@@ -128,7 +129,8 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_get_parent_pid] sys_get_parent_pid
+[SYS_get_parent_pid] sys_get_parent_pid,
+[SYS_find_largest_prime_factor] sys_find_largest_prime_factor,
 };
 
 void

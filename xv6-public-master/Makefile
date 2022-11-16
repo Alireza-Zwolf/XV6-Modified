@@ -181,6 +181,7 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_prime_numbers\
+	_fork_descendants\
 	
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

@@ -25,7 +25,7 @@ int sleep(int);
 int uptime(void);
 int get_parent_pid(void);
 int find_largest_prime_factor(void);
-
+void get_callers(int syscall_number);
 
 // ulib.c
 int stat(const char*, struct stat*);

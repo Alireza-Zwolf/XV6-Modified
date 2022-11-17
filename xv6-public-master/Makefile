@@ -183,7 +183,7 @@ UPROGS=\
 	_prime_numbers\
 	_fork_descendants\
 	_find_largest_prime_factor\
-
+	_get_callers_test\
 	
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

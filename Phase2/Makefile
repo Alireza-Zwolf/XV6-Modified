@@ -181,7 +181,9 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_prime_numbers\
+	_fork_descendants\
 	_find_largest_prime_factor\
+	_get_callers_test\
 	
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -252,7 +254,7 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c wc.c zombie.c\
 	printf.c umalloc.c\
-	printf.c umalloc.c prime_numbers.c find_largest_prime_factor.c\
+	printf.c umalloc.c prime_numbers.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

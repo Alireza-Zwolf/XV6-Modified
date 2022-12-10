@@ -557,570 +557,582 @@ SYSCALL(uptime)
  320:	cd 40                	int    $0x40
  322:	c3                   	ret    
 
-00000323 <find_largest_prime_factor>:
-SYSCALL(find_largest_prime_factor)
+00000323 <get_parent_pid>:
+SYSCALL(get_parent_pid)
  323:	b8 16 00 00 00       	mov    $0x16,%eax
  328:	cd 40                	int    $0x40
  32a:	c3                   	ret    
- 32b:	66 90                	xchg   %ax,%ax
- 32d:	66 90                	xchg   %ax,%ax
- 32f:	90                   	nop
 
-00000330 <printint>:
+0000032b <find_largest_prime_factor>:
+SYSCALL(find_largest_prime_factor)
+ 32b:	b8 17 00 00 00       	mov    $0x17,%eax
+ 330:	cd 40                	int    $0x40
+ 332:	c3                   	ret    
+
+00000333 <get_callers>:
+SYSCALL(get_callers)
+ 333:	b8 18 00 00 00       	mov    $0x18,%eax
+ 338:	cd 40                	int    $0x40
+ 33a:	c3                   	ret    
+ 33b:	66 90                	xchg   %ax,%ax
+ 33d:	66 90                	xchg   %ax,%ax
+ 33f:	90                   	nop
+
+00000340 <printint>:
   write(fd, &c, 1);
 }
 
 static void
 printint(int fd, int xx, int base, int sgn)
 {
- 330:	55                   	push   %ebp
- 331:	89 e5                	mov    %esp,%ebp
- 333:	57                   	push   %edi
- 334:	56                   	push   %esi
- 335:	53                   	push   %ebx
- 336:	83 ec 3c             	sub    $0x3c,%esp
- 339:	89 4d c4             	mov    %ecx,-0x3c(%ebp)
+ 340:	55                   	push   %ebp
+ 341:	89 e5                	mov    %esp,%ebp
+ 343:	57                   	push   %edi
+ 344:	56                   	push   %esi
+ 345:	53                   	push   %ebx
+ 346:	83 ec 3c             	sub    $0x3c,%esp
+ 349:	89 4d c4             	mov    %ecx,-0x3c(%ebp)
   uint x;
 
   neg = 0;
   if(sgn && xx < 0){
     neg = 1;
     x = -xx;
- 33c:	89 d1                	mov    %edx,%ecx
+ 34c:	89 d1                	mov    %edx,%ecx
 {
- 33e:	89 45 b8             	mov    %eax,-0x48(%ebp)
+ 34e:	89 45 b8             	mov    %eax,-0x48(%ebp)
   if(sgn && xx < 0){
- 341:	85 d2                	test   %edx,%edx
- 343:	0f 89 7f 00 00 00    	jns    3c8 <printint+0x98>
- 349:	f6 45 08 01          	testb  $0x1,0x8(%ebp)
- 34d:	74 79                	je     3c8 <printint+0x98>
+ 351:	85 d2                	test   %edx,%edx
+ 353:	0f 89 7f 00 00 00    	jns    3d8 <printint+0x98>
+ 359:	f6 45 08 01          	testb  $0x1,0x8(%ebp)
+ 35d:	74 79                	je     3d8 <printint+0x98>
     neg = 1;
- 34f:	c7 45 bc 01 00 00 00 	movl   $0x1,-0x44(%ebp)
+ 35f:	c7 45 bc 01 00 00 00 	movl   $0x1,-0x44(%ebp)
     x = -xx;
- 356:	f7 d9                	neg    %ecx
+ 366:	f7 d9                	neg    %ecx
   } else {
     x = xx;
   }
 
   i = 0;
- 358:	31 db                	xor    %ebx,%ebx
- 35a:	8d 75 d7             	lea    -0x29(%ebp),%esi
- 35d:	8d 76 00             	lea    0x0(%esi),%esi
+ 368:	31 db                	xor    %ebx,%ebx
+ 36a:	8d 75 d7             	lea    -0x29(%ebp),%esi
+ 36d:	8d 76 00             	lea    0x0(%esi),%esi
   do{
     buf[i++] = digits[x % base];
- 360:	89 c8                	mov    %ecx,%eax
- 362:	31 d2                	xor    %edx,%edx
- 364:	89 cf                	mov    %ecx,%edi
- 366:	f7 75 c4             	divl   -0x3c(%ebp)
- 369:	0f b6 92 68 07 00 00 	movzbl 0x768(%edx),%edx
- 370:	89 45 c0             	mov    %eax,-0x40(%ebp)
- 373:	89 d8                	mov    %ebx,%eax
- 375:	8d 5b 01             	lea    0x1(%ebx),%ebx
+ 370:	89 c8                	mov    %ecx,%eax
+ 372:	31 d2                	xor    %edx,%edx
+ 374:	89 cf                	mov    %ecx,%edi
+ 376:	f7 75 c4             	divl   -0x3c(%ebp)
+ 379:	0f b6 92 78 07 00 00 	movzbl 0x778(%edx),%edx
+ 380:	89 45 c0             	mov    %eax,-0x40(%ebp)
+ 383:	89 d8                	mov    %ebx,%eax
+ 385:	8d 5b 01             	lea    0x1(%ebx),%ebx
   }while((x /= base) != 0);
- 378:	8b 4d c0             	mov    -0x40(%ebp),%ecx
+ 388:	8b 4d c0             	mov    -0x40(%ebp),%ecx
     buf[i++] = digits[x % base];
- 37b:	88 14 1e             	mov    %dl,(%esi,%ebx,1)
+ 38b:	88 14 1e             	mov    %dl,(%esi,%ebx,1)
   }while((x /= base) != 0);
- 37e:	39 7d c4             	cmp    %edi,-0x3c(%ebp)
- 381:	76 dd                	jbe    360 <printint+0x30>
+ 38e:	39 7d c4             	cmp    %edi,-0x3c(%ebp)
+ 391:	76 dd                	jbe    370 <printint+0x30>
   if(neg)
- 383:	8b 4d bc             	mov    -0x44(%ebp),%ecx
- 386:	85 c9                	test   %ecx,%ecx
- 388:	74 0c                	je     396 <printint+0x66>
+ 393:	8b 4d bc             	mov    -0x44(%ebp),%ecx
+ 396:	85 c9                	test   %ecx,%ecx
+ 398:	74 0c                	je     3a6 <printint+0x66>
     buf[i++] = '-';
- 38a:	c6 44 1d d8 2d       	movb   $0x2d,-0x28(%ebp,%ebx,1)
+ 39a:	c6 44 1d d8 2d       	movb   $0x2d,-0x28(%ebp,%ebx,1)
     buf[i++] = digits[x % base];
- 38f:	89 d8                	mov    %ebx,%eax
+ 39f:	89 d8                	mov    %ebx,%eax
     buf[i++] = '-';
- 391:	ba 2d 00 00 00       	mov    $0x2d,%edx
+ 3a1:	ba 2d 00 00 00       	mov    $0x2d,%edx
 
   while(--i >= 0)
- 396:	8b 7d b8             	mov    -0x48(%ebp),%edi
- 399:	8d 5c 05 d7          	lea    -0x29(%ebp,%eax,1),%ebx
- 39d:	eb 07                	jmp    3a6 <printint+0x76>
- 39f:	90                   	nop
+ 3a6:	8b 7d b8             	mov    -0x48(%ebp),%edi
+ 3a9:	8d 5c 05 d7          	lea    -0x29(%ebp,%eax,1),%ebx
+ 3ad:	eb 07                	jmp    3b6 <printint+0x76>
+ 3af:	90                   	nop
     putc(fd, buf[i]);
- 3a0:	0f b6 13             	movzbl (%ebx),%edx
- 3a3:	83 eb 01             	sub    $0x1,%ebx
+ 3b0:	0f b6 13             	movzbl (%ebx),%edx
+ 3b3:	83 eb 01             	sub    $0x1,%ebx
   write(fd, &c, 1);
- 3a6:	83 ec 04             	sub    $0x4,%esp
- 3a9:	88 55 d7             	mov    %dl,-0x29(%ebp)
- 3ac:	6a 01                	push   $0x1
- 3ae:	56                   	push   %esi
- 3af:	57                   	push   %edi
- 3b0:	e8 ee fe ff ff       	call   2a3 <write>
+ 3b6:	83 ec 04             	sub    $0x4,%esp
+ 3b9:	88 55 d7             	mov    %dl,-0x29(%ebp)
+ 3bc:	6a 01                	push   $0x1
+ 3be:	56                   	push   %esi
+ 3bf:	57                   	push   %edi
+ 3c0:	e8 de fe ff ff       	call   2a3 <write>
   while(--i >= 0)
- 3b5:	83 c4 10             	add    $0x10,%esp
- 3b8:	39 de                	cmp    %ebx,%esi
- 3ba:	75 e4                	jne    3a0 <printint+0x70>
+ 3c5:	83 c4 10             	add    $0x10,%esp
+ 3c8:	39 de                	cmp    %ebx,%esi
+ 3ca:	75 e4                	jne    3b0 <printint+0x70>
 }
- 3bc:	8d 65 f4             	lea    -0xc(%ebp),%esp
- 3bf:	5b                   	pop    %ebx
- 3c0:	5e                   	pop    %esi
- 3c1:	5f                   	pop    %edi
- 3c2:	5d                   	pop    %ebp
- 3c3:	c3                   	ret    
- 3c4:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+ 3cc:	8d 65 f4             	lea    -0xc(%ebp),%esp
+ 3cf:	5b                   	pop    %ebx
+ 3d0:	5e                   	pop    %esi
+ 3d1:	5f                   	pop    %edi
+ 3d2:	5d                   	pop    %ebp
+ 3d3:	c3                   	ret    
+ 3d4:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
   neg = 0;
- 3c8:	c7 45 bc 00 00 00 00 	movl   $0x0,-0x44(%ebp)
- 3cf:	eb 87                	jmp    358 <printint+0x28>
- 3d1:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
- 3d8:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
- 3df:	90                   	nop
+ 3d8:	c7 45 bc 00 00 00 00 	movl   $0x0,-0x44(%ebp)
+ 3df:	eb 87                	jmp    368 <printint+0x28>
+ 3e1:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+ 3e8:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+ 3ef:	90                   	nop
 
-000003e0 <printf>:
+000003f0 <printf>:
 
 // Print to the given fd. Only understands %d, %x, %p, %s.
 void
 printf(int fd, const char *fmt, ...)
 {
- 3e0:	55                   	push   %ebp
- 3e1:	89 e5                	mov    %esp,%ebp
- 3e3:	57                   	push   %edi
- 3e4:	56                   	push   %esi
- 3e5:	53                   	push   %ebx
- 3e6:	83 ec 2c             	sub    $0x2c,%esp
+ 3f0:	55                   	push   %ebp
+ 3f1:	89 e5                	mov    %esp,%ebp
+ 3f3:	57                   	push   %edi
+ 3f4:	56                   	push   %esi
+ 3f5:	53                   	push   %ebx
+ 3f6:	83 ec 2c             	sub    $0x2c,%esp
   int c, i, state;
   uint *ap;
 
   state = 0;
   ap = (uint*)(void*)&fmt + 1;
   for(i = 0; fmt[i]; i++){
- 3e9:	8b 5d 0c             	mov    0xc(%ebp),%ebx
+ 3f9:	8b 5d 0c             	mov    0xc(%ebp),%ebx
 {
- 3ec:	8b 75 08             	mov    0x8(%ebp),%esi
+ 3fc:	8b 75 08             	mov    0x8(%ebp),%esi
   for(i = 0; fmt[i]; i++){
- 3ef:	0f b6 13             	movzbl (%ebx),%edx
- 3f2:	84 d2                	test   %dl,%dl
- 3f4:	74 6a                	je     460 <printf+0x80>
+ 3ff:	0f b6 13             	movzbl (%ebx),%edx
+ 402:	84 d2                	test   %dl,%dl
+ 404:	74 6a                	je     470 <printf+0x80>
   ap = (uint*)(void*)&fmt + 1;
- 3f6:	8d 45 10             	lea    0x10(%ebp),%eax
- 3f9:	83 c3 01             	add    $0x1,%ebx
+ 406:	8d 45 10             	lea    0x10(%ebp),%eax
+ 409:	83 c3 01             	add    $0x1,%ebx
   write(fd, &c, 1);
- 3fc:	8d 7d e7             	lea    -0x19(%ebp),%edi
+ 40c:	8d 7d e7             	lea    -0x19(%ebp),%edi
   state = 0;
- 3ff:	31 c9                	xor    %ecx,%ecx
+ 40f:	31 c9                	xor    %ecx,%ecx
   ap = (uint*)(void*)&fmt + 1;
- 401:	89 45 d0             	mov    %eax,-0x30(%ebp)
- 404:	eb 36                	jmp    43c <printf+0x5c>
- 406:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
- 40d:	8d 76 00             	lea    0x0(%esi),%esi
- 410:	89 4d d4             	mov    %ecx,-0x2c(%ebp)
+ 411:	89 45 d0             	mov    %eax,-0x30(%ebp)
+ 414:	eb 36                	jmp    44c <printf+0x5c>
+ 416:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+ 41d:	8d 76 00             	lea    0x0(%esi),%esi
+ 420:	89 4d d4             	mov    %ecx,-0x2c(%ebp)
     c = fmt[i] & 0xff;
     if(state == 0){
       if(c == '%'){
         state = '%';
- 413:	b9 25 00 00 00       	mov    $0x25,%ecx
+ 423:	b9 25 00 00 00       	mov    $0x25,%ecx
       if(c == '%'){
- 418:	83 f8 25             	cmp    $0x25,%eax
- 41b:	74 15                	je     432 <printf+0x52>
+ 428:	83 f8 25             	cmp    $0x25,%eax
+ 42b:	74 15                	je     442 <printf+0x52>
   write(fd, &c, 1);
- 41d:	83 ec 04             	sub    $0x4,%esp
- 420:	88 55 e7             	mov    %dl,-0x19(%ebp)
- 423:	6a 01                	push   $0x1
- 425:	57                   	push   %edi
- 426:	56                   	push   %esi
- 427:	e8 77 fe ff ff       	call   2a3 <write>
- 42c:	8b 4d d4             	mov    -0x2c(%ebp),%ecx
+ 42d:	83 ec 04             	sub    $0x4,%esp
+ 430:	88 55 e7             	mov    %dl,-0x19(%ebp)
+ 433:	6a 01                	push   $0x1
+ 435:	57                   	push   %edi
+ 436:	56                   	push   %esi
+ 437:	e8 67 fe ff ff       	call   2a3 <write>
+ 43c:	8b 4d d4             	mov    -0x2c(%ebp),%ecx
       } else {
         putc(fd, c);
- 42f:	83 c4 10             	add    $0x10,%esp
+ 43f:	83 c4 10             	add    $0x10,%esp
   for(i = 0; fmt[i]; i++){
- 432:	0f b6 13             	movzbl (%ebx),%edx
- 435:	83 c3 01             	add    $0x1,%ebx
- 438:	84 d2                	test   %dl,%dl
- 43a:	74 24                	je     460 <printf+0x80>
+ 442:	0f b6 13             	movzbl (%ebx),%edx
+ 445:	83 c3 01             	add    $0x1,%ebx
+ 448:	84 d2                	test   %dl,%dl
+ 44a:	74 24                	je     470 <printf+0x80>
     c = fmt[i] & 0xff;
- 43c:	0f b6 c2             	movzbl %dl,%eax
+ 44c:	0f b6 c2             	movzbl %dl,%eax
     if(state == 0){
- 43f:	85 c9                	test   %ecx,%ecx
- 441:	74 cd                	je     410 <printf+0x30>
+ 44f:	85 c9                	test   %ecx,%ecx
+ 451:	74 cd                	je     420 <printf+0x30>
       }
     } else if(state == '%'){
- 443:	83 f9 25             	cmp    $0x25,%ecx
- 446:	75 ea                	jne    432 <printf+0x52>
+ 453:	83 f9 25             	cmp    $0x25,%ecx
+ 456:	75 ea                	jne    442 <printf+0x52>
       if(c == 'd'){
- 448:	83 f8 25             	cmp    $0x25,%eax
- 44b:	0f 84 07 01 00 00    	je     558 <printf+0x178>
- 451:	83 e8 63             	sub    $0x63,%eax
- 454:	83 f8 15             	cmp    $0x15,%eax
- 457:	77 17                	ja     470 <printf+0x90>
- 459:	ff 24 85 10 07 00 00 	jmp    *0x710(,%eax,4)
+ 458:	83 f8 25             	cmp    $0x25,%eax
+ 45b:	0f 84 07 01 00 00    	je     568 <printf+0x178>
+ 461:	83 e8 63             	sub    $0x63,%eax
+ 464:	83 f8 15             	cmp    $0x15,%eax
+ 467:	77 17                	ja     480 <printf+0x90>
+ 469:	ff 24 85 20 07 00 00 	jmp    *0x720(,%eax,4)
         putc(fd, c);
       }
       state = 0;
     }
   }
 }
- 460:	8d 65 f4             	lea    -0xc(%ebp),%esp
- 463:	5b                   	pop    %ebx
- 464:	5e                   	pop    %esi
- 465:	5f                   	pop    %edi
- 466:	5d                   	pop    %ebp
- 467:	c3                   	ret    
- 468:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
- 46f:	90                   	nop
+ 470:	8d 65 f4             	lea    -0xc(%ebp),%esp
+ 473:	5b                   	pop    %ebx
+ 474:	5e                   	pop    %esi
+ 475:	5f                   	pop    %edi
+ 476:	5d                   	pop    %ebp
+ 477:	c3                   	ret    
+ 478:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+ 47f:	90                   	nop
   write(fd, &c, 1);
- 470:	83 ec 04             	sub    $0x4,%esp
- 473:	88 55 d4             	mov    %dl,-0x2c(%ebp)
- 476:	6a 01                	push   $0x1
- 478:	57                   	push   %edi
- 479:	56                   	push   %esi
- 47a:	c6 45 e7 25          	movb   $0x25,-0x19(%ebp)
- 47e:	e8 20 fe ff ff       	call   2a3 <write>
+ 480:	83 ec 04             	sub    $0x4,%esp
+ 483:	88 55 d4             	mov    %dl,-0x2c(%ebp)
+ 486:	6a 01                	push   $0x1
+ 488:	57                   	push   %edi
+ 489:	56                   	push   %esi
+ 48a:	c6 45 e7 25          	movb   $0x25,-0x19(%ebp)
+ 48e:	e8 10 fe ff ff       	call   2a3 <write>
         putc(fd, c);
- 483:	0f b6 55 d4          	movzbl -0x2c(%ebp),%edx
+ 493:	0f b6 55 d4          	movzbl -0x2c(%ebp),%edx
   write(fd, &c, 1);
- 487:	83 c4 0c             	add    $0xc,%esp
- 48a:	88 55 e7             	mov    %dl,-0x19(%ebp)
- 48d:	6a 01                	push   $0x1
- 48f:	57                   	push   %edi
- 490:	56                   	push   %esi
- 491:	e8 0d fe ff ff       	call   2a3 <write>
+ 497:	83 c4 0c             	add    $0xc,%esp
+ 49a:	88 55 e7             	mov    %dl,-0x19(%ebp)
+ 49d:	6a 01                	push   $0x1
+ 49f:	57                   	push   %edi
+ 4a0:	56                   	push   %esi
+ 4a1:	e8 fd fd ff ff       	call   2a3 <write>
         putc(fd, c);
- 496:	83 c4 10             	add    $0x10,%esp
+ 4a6:	83 c4 10             	add    $0x10,%esp
       state = 0;
- 499:	31 c9                	xor    %ecx,%ecx
- 49b:	eb 95                	jmp    432 <printf+0x52>
- 49d:	8d 76 00             	lea    0x0(%esi),%esi
+ 4a9:	31 c9                	xor    %ecx,%ecx
+ 4ab:	eb 95                	jmp    442 <printf+0x52>
+ 4ad:	8d 76 00             	lea    0x0(%esi),%esi
         printint(fd, *ap, 16, 0);
- 4a0:	83 ec 0c             	sub    $0xc,%esp
- 4a3:	b9 10 00 00 00       	mov    $0x10,%ecx
- 4a8:	6a 00                	push   $0x0
- 4aa:	8b 45 d0             	mov    -0x30(%ebp),%eax
- 4ad:	8b 10                	mov    (%eax),%edx
- 4af:	89 f0                	mov    %esi,%eax
- 4b1:	e8 7a fe ff ff       	call   330 <printint>
+ 4b0:	83 ec 0c             	sub    $0xc,%esp
+ 4b3:	b9 10 00 00 00       	mov    $0x10,%ecx
+ 4b8:	6a 00                	push   $0x0
+ 4ba:	8b 45 d0             	mov    -0x30(%ebp),%eax
+ 4bd:	8b 10                	mov    (%eax),%edx
+ 4bf:	89 f0                	mov    %esi,%eax
+ 4c1:	e8 7a fe ff ff       	call   340 <printint>
         ap++;
- 4b6:	83 45 d0 04          	addl   $0x4,-0x30(%ebp)
- 4ba:	83 c4 10             	add    $0x10,%esp
+ 4c6:	83 45 d0 04          	addl   $0x4,-0x30(%ebp)
+ 4ca:	83 c4 10             	add    $0x10,%esp
       state = 0;
- 4bd:	31 c9                	xor    %ecx,%ecx
- 4bf:	e9 6e ff ff ff       	jmp    432 <printf+0x52>
- 4c4:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+ 4cd:	31 c9                	xor    %ecx,%ecx
+ 4cf:	e9 6e ff ff ff       	jmp    442 <printf+0x52>
+ 4d4:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
         s = (char*)*ap;
- 4c8:	8b 45 d0             	mov    -0x30(%ebp),%eax
- 4cb:	8b 10                	mov    (%eax),%edx
+ 4d8:	8b 45 d0             	mov    -0x30(%ebp),%eax
+ 4db:	8b 10                	mov    (%eax),%edx
         ap++;
- 4cd:	83 c0 04             	add    $0x4,%eax
- 4d0:	89 45 d0             	mov    %eax,-0x30(%ebp)
+ 4dd:	83 c0 04             	add    $0x4,%eax
+ 4e0:	89 45 d0             	mov    %eax,-0x30(%ebp)
         if(s == 0)
- 4d3:	85 d2                	test   %edx,%edx
- 4d5:	0f 84 8d 00 00 00    	je     568 <printf+0x188>
+ 4e3:	85 d2                	test   %edx,%edx
+ 4e5:	0f 84 8d 00 00 00    	je     578 <printf+0x188>
         while(*s != 0){
- 4db:	0f b6 02             	movzbl (%edx),%eax
+ 4eb:	0f b6 02             	movzbl (%edx),%eax
       state = 0;
- 4de:	31 c9                	xor    %ecx,%ecx
+ 4ee:	31 c9                	xor    %ecx,%ecx
         while(*s != 0){
- 4e0:	84 c0                	test   %al,%al
- 4e2:	0f 84 4a ff ff ff    	je     432 <printf+0x52>
- 4e8:	89 5d d4             	mov    %ebx,-0x2c(%ebp)
- 4eb:	89 d3                	mov    %edx,%ebx
- 4ed:	8d 76 00             	lea    0x0(%esi),%esi
+ 4f0:	84 c0                	test   %al,%al
+ 4f2:	0f 84 4a ff ff ff    	je     442 <printf+0x52>
+ 4f8:	89 5d d4             	mov    %ebx,-0x2c(%ebp)
+ 4fb:	89 d3                	mov    %edx,%ebx
+ 4fd:	8d 76 00             	lea    0x0(%esi),%esi
   write(fd, &c, 1);
- 4f0:	83 ec 04             	sub    $0x4,%esp
+ 500:	83 ec 04             	sub    $0x4,%esp
           s++;
- 4f3:	83 c3 01             	add    $0x1,%ebx
- 4f6:	88 45 e7             	mov    %al,-0x19(%ebp)
+ 503:	83 c3 01             	add    $0x1,%ebx
+ 506:	88 45 e7             	mov    %al,-0x19(%ebp)
   write(fd, &c, 1);
- 4f9:	6a 01                	push   $0x1
- 4fb:	57                   	push   %edi
- 4fc:	56                   	push   %esi
- 4fd:	e8 a1 fd ff ff       	call   2a3 <write>
+ 509:	6a 01                	push   $0x1
+ 50b:	57                   	push   %edi
+ 50c:	56                   	push   %esi
+ 50d:	e8 91 fd ff ff       	call   2a3 <write>
         while(*s != 0){
- 502:	0f b6 03             	movzbl (%ebx),%eax
- 505:	83 c4 10             	add    $0x10,%esp
- 508:	84 c0                	test   %al,%al
- 50a:	75 e4                	jne    4f0 <printf+0x110>
+ 512:	0f b6 03             	movzbl (%ebx),%eax
+ 515:	83 c4 10             	add    $0x10,%esp
+ 518:	84 c0                	test   %al,%al
+ 51a:	75 e4                	jne    500 <printf+0x110>
       state = 0;
- 50c:	8b 5d d4             	mov    -0x2c(%ebp),%ebx
- 50f:	31 c9                	xor    %ecx,%ecx
- 511:	e9 1c ff ff ff       	jmp    432 <printf+0x52>
- 516:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
- 51d:	8d 76 00             	lea    0x0(%esi),%esi
+ 51c:	8b 5d d4             	mov    -0x2c(%ebp),%ebx
+ 51f:	31 c9                	xor    %ecx,%ecx
+ 521:	e9 1c ff ff ff       	jmp    442 <printf+0x52>
+ 526:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+ 52d:	8d 76 00             	lea    0x0(%esi),%esi
         printint(fd, *ap, 10, 1);
- 520:	83 ec 0c             	sub    $0xc,%esp
- 523:	b9 0a 00 00 00       	mov    $0xa,%ecx
- 528:	6a 01                	push   $0x1
- 52a:	e9 7b ff ff ff       	jmp    4aa <printf+0xca>
- 52f:	90                   	nop
-        putc(fd, *ap);
- 530:	8b 45 d0             	mov    -0x30(%ebp),%eax
-  write(fd, &c, 1);
- 533:	83 ec 04             	sub    $0x4,%esp
-        putc(fd, *ap);
- 536:	8b 00                	mov    (%eax),%eax
-  write(fd, &c, 1);
+ 530:	83 ec 0c             	sub    $0xc,%esp
+ 533:	b9 0a 00 00 00       	mov    $0xa,%ecx
  538:	6a 01                	push   $0x1
- 53a:	57                   	push   %edi
- 53b:	56                   	push   %esi
+ 53a:	e9 7b ff ff ff       	jmp    4ba <printf+0xca>
+ 53f:	90                   	nop
         putc(fd, *ap);
- 53c:	88 45 e7             	mov    %al,-0x19(%ebp)
+ 540:	8b 45 d0             	mov    -0x30(%ebp),%eax
   write(fd, &c, 1);
- 53f:	e8 5f fd ff ff       	call   2a3 <write>
+ 543:	83 ec 04             	sub    $0x4,%esp
+        putc(fd, *ap);
+ 546:	8b 00                	mov    (%eax),%eax
+  write(fd, &c, 1);
+ 548:	6a 01                	push   $0x1
+ 54a:	57                   	push   %edi
+ 54b:	56                   	push   %esi
+        putc(fd, *ap);
+ 54c:	88 45 e7             	mov    %al,-0x19(%ebp)
+  write(fd, &c, 1);
+ 54f:	e8 4f fd ff ff       	call   2a3 <write>
         ap++;
- 544:	83 45 d0 04          	addl   $0x4,-0x30(%ebp)
- 548:	83 c4 10             	add    $0x10,%esp
+ 554:	83 45 d0 04          	addl   $0x4,-0x30(%ebp)
+ 558:	83 c4 10             	add    $0x10,%esp
       state = 0;
- 54b:	31 c9                	xor    %ecx,%ecx
- 54d:	e9 e0 fe ff ff       	jmp    432 <printf+0x52>
- 552:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
+ 55b:	31 c9                	xor    %ecx,%ecx
+ 55d:	e9 e0 fe ff ff       	jmp    442 <printf+0x52>
+ 562:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
         putc(fd, c);
- 558:	88 55 e7             	mov    %dl,-0x19(%ebp)
+ 568:	88 55 e7             	mov    %dl,-0x19(%ebp)
   write(fd, &c, 1);
- 55b:	83 ec 04             	sub    $0x4,%esp
- 55e:	e9 2a ff ff ff       	jmp    48d <printf+0xad>
- 563:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
- 567:	90                   	nop
+ 56b:	83 ec 04             	sub    $0x4,%esp
+ 56e:	e9 2a ff ff ff       	jmp    49d <printf+0xad>
+ 573:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+ 577:	90                   	nop
           s = "(null)";
- 568:	ba 08 07 00 00       	mov    $0x708,%edx
+ 578:	ba 18 07 00 00       	mov    $0x718,%edx
         while(*s != 0){
- 56d:	89 5d d4             	mov    %ebx,-0x2c(%ebp)
- 570:	b8 28 00 00 00       	mov    $0x28,%eax
- 575:	89 d3                	mov    %edx,%ebx
- 577:	e9 74 ff ff ff       	jmp    4f0 <printf+0x110>
- 57c:	66 90                	xchg   %ax,%ax
- 57e:	66 90                	xchg   %ax,%ax
+ 57d:	89 5d d4             	mov    %ebx,-0x2c(%ebp)
+ 580:	b8 28 00 00 00       	mov    $0x28,%eax
+ 585:	89 d3                	mov    %edx,%ebx
+ 587:	e9 74 ff ff ff       	jmp    500 <printf+0x110>
+ 58c:	66 90                	xchg   %ax,%ax
+ 58e:	66 90                	xchg   %ax,%ax
 
-00000580 <free>:
+00000590 <free>:
 static Header base;
 static Header *freep;
 
 void
 free(void *ap)
 {
- 580:	55                   	push   %ebp
+ 590:	55                   	push   %ebp
   Header *bp, *p;
 
   bp = (Header*)ap - 1;
   for(p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr)
- 581:	a1 10 0a 00 00       	mov    0xa10,%eax
+ 591:	a1 20 0a 00 00       	mov    0xa20,%eax
 {
- 586:	89 e5                	mov    %esp,%ebp
- 588:	57                   	push   %edi
- 589:	56                   	push   %esi
- 58a:	53                   	push   %ebx
- 58b:	8b 5d 08             	mov    0x8(%ebp),%ebx
+ 596:	89 e5                	mov    %esp,%ebp
+ 598:	57                   	push   %edi
+ 599:	56                   	push   %esi
+ 59a:	53                   	push   %ebx
+ 59b:	8b 5d 08             	mov    0x8(%ebp),%ebx
   bp = (Header*)ap - 1;
- 58e:	8d 4b f8             	lea    -0x8(%ebx),%ecx
+ 59e:	8d 4b f8             	lea    -0x8(%ebx),%ecx
   for(p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr)
- 591:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
- 598:	89 c2                	mov    %eax,%edx
- 59a:	8b 00                	mov    (%eax),%eax
- 59c:	39 ca                	cmp    %ecx,%edx
- 59e:	73 30                	jae    5d0 <free+0x50>
- 5a0:	39 c1                	cmp    %eax,%ecx
- 5a2:	72 04                	jb     5a8 <free+0x28>
+ 5a1:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+ 5a8:	89 c2                	mov    %eax,%edx
+ 5aa:	8b 00                	mov    (%eax),%eax
+ 5ac:	39 ca                	cmp    %ecx,%edx
+ 5ae:	73 30                	jae    5e0 <free+0x50>
+ 5b0:	39 c1                	cmp    %eax,%ecx
+ 5b2:	72 04                	jb     5b8 <free+0x28>
     if(p >= p->s.ptr && (bp > p || bp < p->s.ptr))
- 5a4:	39 c2                	cmp    %eax,%edx
- 5a6:	72 f0                	jb     598 <free+0x18>
+ 5b4:	39 c2                	cmp    %eax,%edx
+ 5b6:	72 f0                	jb     5a8 <free+0x18>
       break;
   if(bp + bp->s.size == p->s.ptr){
- 5a8:	8b 73 fc             	mov    -0x4(%ebx),%esi
- 5ab:	8d 3c f1             	lea    (%ecx,%esi,8),%edi
- 5ae:	39 f8                	cmp    %edi,%eax
- 5b0:	74 30                	je     5e2 <free+0x62>
+ 5b8:	8b 73 fc             	mov    -0x4(%ebx),%esi
+ 5bb:	8d 3c f1             	lea    (%ecx,%esi,8),%edi
+ 5be:	39 f8                	cmp    %edi,%eax
+ 5c0:	74 30                	je     5f2 <free+0x62>
     bp->s.size += p->s.ptr->s.size;
     bp->s.ptr = p->s.ptr->s.ptr;
- 5b2:	89 43 f8             	mov    %eax,-0x8(%ebx)
+ 5c2:	89 43 f8             	mov    %eax,-0x8(%ebx)
   } else
     bp->s.ptr = p->s.ptr;
   if(p + p->s.size == bp){
- 5b5:	8b 42 04             	mov    0x4(%edx),%eax
- 5b8:	8d 34 c2             	lea    (%edx,%eax,8),%esi
- 5bb:	39 f1                	cmp    %esi,%ecx
- 5bd:	74 3a                	je     5f9 <free+0x79>
+ 5c5:	8b 42 04             	mov    0x4(%edx),%eax
+ 5c8:	8d 34 c2             	lea    (%edx,%eax,8),%esi
+ 5cb:	39 f1                	cmp    %esi,%ecx
+ 5cd:	74 3a                	je     609 <free+0x79>
     p->s.size += bp->s.size;
     p->s.ptr = bp->s.ptr;
- 5bf:	89 0a                	mov    %ecx,(%edx)
+ 5cf:	89 0a                	mov    %ecx,(%edx)
   } else
     p->s.ptr = bp;
   freep = p;
 }
- 5c1:	5b                   	pop    %ebx
+ 5d1:	5b                   	pop    %ebx
   freep = p;
- 5c2:	89 15 10 0a 00 00    	mov    %edx,0xa10
+ 5d2:	89 15 20 0a 00 00    	mov    %edx,0xa20
 }
- 5c8:	5e                   	pop    %esi
- 5c9:	5f                   	pop    %edi
- 5ca:	5d                   	pop    %ebp
- 5cb:	c3                   	ret    
- 5cc:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
+ 5d8:	5e                   	pop    %esi
+ 5d9:	5f                   	pop    %edi
+ 5da:	5d                   	pop    %ebp
+ 5db:	c3                   	ret    
+ 5dc:	8d 74 26 00          	lea    0x0(%esi,%eiz,1),%esi
     if(p >= p->s.ptr && (bp > p || bp < p->s.ptr))
- 5d0:	39 c2                	cmp    %eax,%edx
- 5d2:	72 c4                	jb     598 <free+0x18>
- 5d4:	39 c1                	cmp    %eax,%ecx
- 5d6:	73 c0                	jae    598 <free+0x18>
+ 5e0:	39 c2                	cmp    %eax,%edx
+ 5e2:	72 c4                	jb     5a8 <free+0x18>
+ 5e4:	39 c1                	cmp    %eax,%ecx
+ 5e6:	73 c0                	jae    5a8 <free+0x18>
   if(bp + bp->s.size == p->s.ptr){
- 5d8:	8b 73 fc             	mov    -0x4(%ebx),%esi
- 5db:	8d 3c f1             	lea    (%ecx,%esi,8),%edi
- 5de:	39 f8                	cmp    %edi,%eax
- 5e0:	75 d0                	jne    5b2 <free+0x32>
+ 5e8:	8b 73 fc             	mov    -0x4(%ebx),%esi
+ 5eb:	8d 3c f1             	lea    (%ecx,%esi,8),%edi
+ 5ee:	39 f8                	cmp    %edi,%eax
+ 5f0:	75 d0                	jne    5c2 <free+0x32>
     bp->s.size += p->s.ptr->s.size;
- 5e2:	03 70 04             	add    0x4(%eax),%esi
- 5e5:	89 73 fc             	mov    %esi,-0x4(%ebx)
+ 5f2:	03 70 04             	add    0x4(%eax),%esi
+ 5f5:	89 73 fc             	mov    %esi,-0x4(%ebx)
     bp->s.ptr = p->s.ptr->s.ptr;
- 5e8:	8b 02                	mov    (%edx),%eax
- 5ea:	8b 00                	mov    (%eax),%eax
- 5ec:	89 43 f8             	mov    %eax,-0x8(%ebx)
+ 5f8:	8b 02                	mov    (%edx),%eax
+ 5fa:	8b 00                	mov    (%eax),%eax
+ 5fc:	89 43 f8             	mov    %eax,-0x8(%ebx)
   if(p + p->s.size == bp){
- 5ef:	8b 42 04             	mov    0x4(%edx),%eax
- 5f2:	8d 34 c2             	lea    (%edx,%eax,8),%esi
- 5f5:	39 f1                	cmp    %esi,%ecx
- 5f7:	75 c6                	jne    5bf <free+0x3f>
+ 5ff:	8b 42 04             	mov    0x4(%edx),%eax
+ 602:	8d 34 c2             	lea    (%edx,%eax,8),%esi
+ 605:	39 f1                	cmp    %esi,%ecx
+ 607:	75 c6                	jne    5cf <free+0x3f>
     p->s.size += bp->s.size;
- 5f9:	03 43 fc             	add    -0x4(%ebx),%eax
+ 609:	03 43 fc             	add    -0x4(%ebx),%eax
   freep = p;
- 5fc:	89 15 10 0a 00 00    	mov    %edx,0xa10
+ 60c:	89 15 20 0a 00 00    	mov    %edx,0xa20
     p->s.size += bp->s.size;
- 602:	89 42 04             	mov    %eax,0x4(%edx)
+ 612:	89 42 04             	mov    %eax,0x4(%edx)
     p->s.ptr = bp->s.ptr;
- 605:	8b 4b f8             	mov    -0x8(%ebx),%ecx
- 608:	89 0a                	mov    %ecx,(%edx)
+ 615:	8b 4b f8             	mov    -0x8(%ebx),%ecx
+ 618:	89 0a                	mov    %ecx,(%edx)
 }
- 60a:	5b                   	pop    %ebx
- 60b:	5e                   	pop    %esi
- 60c:	5f                   	pop    %edi
- 60d:	5d                   	pop    %ebp
- 60e:	c3                   	ret    
- 60f:	90                   	nop
+ 61a:	5b                   	pop    %ebx
+ 61b:	5e                   	pop    %esi
+ 61c:	5f                   	pop    %edi
+ 61d:	5d                   	pop    %ebp
+ 61e:	c3                   	ret    
+ 61f:	90                   	nop
 
-00000610 <malloc>:
+00000620 <malloc>:
   return freep;
 }
 
 void*
 malloc(uint nbytes)
 {
- 610:	55                   	push   %ebp
- 611:	89 e5                	mov    %esp,%ebp
- 613:	57                   	push   %edi
- 614:	56                   	push   %esi
- 615:	53                   	push   %ebx
- 616:	83 ec 1c             	sub    $0x1c,%esp
+ 620:	55                   	push   %ebp
+ 621:	89 e5                	mov    %esp,%ebp
+ 623:	57                   	push   %edi
+ 624:	56                   	push   %esi
+ 625:	53                   	push   %ebx
+ 626:	83 ec 1c             	sub    $0x1c,%esp
   Header *p, *prevp;
   uint nunits;
 
   nunits = (nbytes + sizeof(Header) - 1)/sizeof(Header) + 1;
- 619:	8b 45 08             	mov    0x8(%ebp),%eax
+ 629:	8b 45 08             	mov    0x8(%ebp),%eax
   if((prevp = freep) == 0){
- 61c:	8b 3d 10 0a 00 00    	mov    0xa10,%edi
+ 62c:	8b 3d 20 0a 00 00    	mov    0xa20,%edi
   nunits = (nbytes + sizeof(Header) - 1)/sizeof(Header) + 1;
- 622:	8d 70 07             	lea    0x7(%eax),%esi
- 625:	c1 ee 03             	shr    $0x3,%esi
- 628:	83 c6 01             	add    $0x1,%esi
+ 632:	8d 70 07             	lea    0x7(%eax),%esi
+ 635:	c1 ee 03             	shr    $0x3,%esi
+ 638:	83 c6 01             	add    $0x1,%esi
   if((prevp = freep) == 0){
- 62b:	85 ff                	test   %edi,%edi
- 62d:	0f 84 9d 00 00 00    	je     6d0 <malloc+0xc0>
+ 63b:	85 ff                	test   %edi,%edi
+ 63d:	0f 84 9d 00 00 00    	je     6e0 <malloc+0xc0>
     base.s.ptr = freep = prevp = &base;
     base.s.size = 0;
   }
   for(p = prevp->s.ptr; ; prevp = p, p = p->s.ptr){
- 633:	8b 17                	mov    (%edi),%edx
+ 643:	8b 17                	mov    (%edi),%edx
     if(p->s.size >= nunits){
- 635:	8b 4a 04             	mov    0x4(%edx),%ecx
- 638:	39 f1                	cmp    %esi,%ecx
- 63a:	73 6a                	jae    6a6 <malloc+0x96>
- 63c:	bb 00 10 00 00       	mov    $0x1000,%ebx
- 641:	39 de                	cmp    %ebx,%esi
- 643:	0f 43 de             	cmovae %esi,%ebx
+ 645:	8b 4a 04             	mov    0x4(%edx),%ecx
+ 648:	39 f1                	cmp    %esi,%ecx
+ 64a:	73 6a                	jae    6b6 <malloc+0x96>
+ 64c:	bb 00 10 00 00       	mov    $0x1000,%ebx
+ 651:	39 de                	cmp    %ebx,%esi
+ 653:	0f 43 de             	cmovae %esi,%ebx
   p = sbrk(nu * sizeof(Header));
- 646:	8d 04 dd 00 00 00 00 	lea    0x0(,%ebx,8),%eax
- 64d:	89 45 e4             	mov    %eax,-0x1c(%ebp)
- 650:	eb 17                	jmp    669 <malloc+0x59>
- 652:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
+ 656:	8d 04 dd 00 00 00 00 	lea    0x0(,%ebx,8),%eax
+ 65d:	89 45 e4             	mov    %eax,-0x1c(%ebp)
+ 660:	eb 17                	jmp    679 <malloc+0x59>
+ 662:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
   for(p = prevp->s.ptr; ; prevp = p, p = p->s.ptr){
- 658:	8b 02                	mov    (%edx),%eax
+ 668:	8b 02                	mov    (%edx),%eax
     if(p->s.size >= nunits){
- 65a:	8b 48 04             	mov    0x4(%eax),%ecx
- 65d:	39 f1                	cmp    %esi,%ecx
- 65f:	73 4f                	jae    6b0 <malloc+0xa0>
+ 66a:	8b 48 04             	mov    0x4(%eax),%ecx
+ 66d:	39 f1                	cmp    %esi,%ecx
+ 66f:	73 4f                	jae    6c0 <malloc+0xa0>
         p->s.size = nunits;
       }
       freep = prevp;
       return (void*)(p + 1);
     }
     if(p == freep)
- 661:	8b 3d 10 0a 00 00    	mov    0xa10,%edi
- 667:	89 c2                	mov    %eax,%edx
- 669:	39 d7                	cmp    %edx,%edi
- 66b:	75 eb                	jne    658 <malloc+0x48>
+ 671:	8b 3d 20 0a 00 00    	mov    0xa20,%edi
+ 677:	89 c2                	mov    %eax,%edx
+ 679:	39 d7                	cmp    %edx,%edi
+ 67b:	75 eb                	jne    668 <malloc+0x48>
   p = sbrk(nu * sizeof(Header));
- 66d:	83 ec 0c             	sub    $0xc,%esp
- 670:	ff 75 e4             	push   -0x1c(%ebp)
- 673:	e8 93 fc ff ff       	call   30b <sbrk>
+ 67d:	83 ec 0c             	sub    $0xc,%esp
+ 680:	ff 75 e4             	push   -0x1c(%ebp)
+ 683:	e8 83 fc ff ff       	call   30b <sbrk>
   if(p == (char*)-1)
- 678:	83 c4 10             	add    $0x10,%esp
- 67b:	83 f8 ff             	cmp    $0xffffffff,%eax
- 67e:	74 1c                	je     69c <malloc+0x8c>
+ 688:	83 c4 10             	add    $0x10,%esp
+ 68b:	83 f8 ff             	cmp    $0xffffffff,%eax
+ 68e:	74 1c                	je     6ac <malloc+0x8c>
   hp->s.size = nu;
- 680:	89 58 04             	mov    %ebx,0x4(%eax)
+ 690:	89 58 04             	mov    %ebx,0x4(%eax)
   free((void*)(hp + 1));
- 683:	83 ec 0c             	sub    $0xc,%esp
- 686:	83 c0 08             	add    $0x8,%eax
- 689:	50                   	push   %eax
- 68a:	e8 f1 fe ff ff       	call   580 <free>
+ 693:	83 ec 0c             	sub    $0xc,%esp
+ 696:	83 c0 08             	add    $0x8,%eax
+ 699:	50                   	push   %eax
+ 69a:	e8 f1 fe ff ff       	call   590 <free>
   return freep;
- 68f:	8b 15 10 0a 00 00    	mov    0xa10,%edx
+ 69f:	8b 15 20 0a 00 00    	mov    0xa20,%edx
       if((p = morecore(nunits)) == 0)
- 695:	83 c4 10             	add    $0x10,%esp
- 698:	85 d2                	test   %edx,%edx
- 69a:	75 bc                	jne    658 <malloc+0x48>
+ 6a5:	83 c4 10             	add    $0x10,%esp
+ 6a8:	85 d2                	test   %edx,%edx
+ 6aa:	75 bc                	jne    668 <malloc+0x48>
         return 0;
   }
 }
- 69c:	8d 65 f4             	lea    -0xc(%ebp),%esp
+ 6ac:	8d 65 f4             	lea    -0xc(%ebp),%esp
         return 0;
- 69f:	31 c0                	xor    %eax,%eax
+ 6af:	31 c0                	xor    %eax,%eax
 }
- 6a1:	5b                   	pop    %ebx
- 6a2:	5e                   	pop    %esi
- 6a3:	5f                   	pop    %edi
- 6a4:	5d                   	pop    %ebp
- 6a5:	c3                   	ret    
+ 6b1:	5b                   	pop    %ebx
+ 6b2:	5e                   	pop    %esi
+ 6b3:	5f                   	pop    %edi
+ 6b4:	5d                   	pop    %ebp
+ 6b5:	c3                   	ret    
     if(p->s.size >= nunits){
- 6a6:	89 d0                	mov    %edx,%eax
- 6a8:	89 fa                	mov    %edi,%edx
- 6aa:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
+ 6b6:	89 d0                	mov    %edx,%eax
+ 6b8:	89 fa                	mov    %edi,%edx
+ 6ba:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
       if(p->s.size == nunits)
- 6b0:	39 ce                	cmp    %ecx,%esi
- 6b2:	74 4c                	je     700 <malloc+0xf0>
+ 6c0:	39 ce                	cmp    %ecx,%esi
+ 6c2:	74 4c                	je     710 <malloc+0xf0>
         p->s.size -= nunits;
- 6b4:	29 f1                	sub    %esi,%ecx
- 6b6:	89 48 04             	mov    %ecx,0x4(%eax)
+ 6c4:	29 f1                	sub    %esi,%ecx
+ 6c6:	89 48 04             	mov    %ecx,0x4(%eax)
         p += p->s.size;
- 6b9:	8d 04 c8             	lea    (%eax,%ecx,8),%eax
+ 6c9:	8d 04 c8             	lea    (%eax,%ecx,8),%eax
         p->s.size = nunits;
- 6bc:	89 70 04             	mov    %esi,0x4(%eax)
+ 6cc:	89 70 04             	mov    %esi,0x4(%eax)
       freep = prevp;
- 6bf:	89 15 10 0a 00 00    	mov    %edx,0xa10
+ 6cf:	89 15 20 0a 00 00    	mov    %edx,0xa20
 }
- 6c5:	8d 65 f4             	lea    -0xc(%ebp),%esp
+ 6d5:	8d 65 f4             	lea    -0xc(%ebp),%esp
       return (void*)(p + 1);
- 6c8:	83 c0 08             	add    $0x8,%eax
+ 6d8:	83 c0 08             	add    $0x8,%eax
 }
- 6cb:	5b                   	pop    %ebx
- 6cc:	5e                   	pop    %esi
- 6cd:	5f                   	pop    %edi
- 6ce:	5d                   	pop    %ebp
- 6cf:	c3                   	ret    
+ 6db:	5b                   	pop    %ebx
+ 6dc:	5e                   	pop    %esi
+ 6dd:	5f                   	pop    %edi
+ 6de:	5d                   	pop    %ebp
+ 6df:	c3                   	ret    
     base.s.ptr = freep = prevp = &base;
- 6d0:	c7 05 10 0a 00 00 14 	movl   $0xa14,0xa10
- 6d7:	0a 00 00 
+ 6e0:	c7 05 20 0a 00 00 24 	movl   $0xa24,0xa20
+ 6e7:	0a 00 00 
     base.s.size = 0;
- 6da:	bf 14 0a 00 00       	mov    $0xa14,%edi
+ 6ea:	bf 24 0a 00 00       	mov    $0xa24,%edi
     base.s.ptr = freep = prevp = &base;
- 6df:	c7 05 14 0a 00 00 14 	movl   $0xa14,0xa14
- 6e6:	0a 00 00 
+ 6ef:	c7 05 24 0a 00 00 24 	movl   $0xa24,0xa24
+ 6f6:	0a 00 00 
   for(p = prevp->s.ptr; ; prevp = p, p = p->s.ptr){
- 6e9:	89 fa                	mov    %edi,%edx
+ 6f9:	89 fa                	mov    %edi,%edx
     base.s.size = 0;
- 6eb:	c7 05 18 0a 00 00 00 	movl   $0x0,0xa18
- 6f2:	00 00 00 
+ 6fb:	c7 05 28 0a 00 00 00 	movl   $0x0,0xa28
+ 702:	00 00 00 
     if(p->s.size >= nunits){
- 6f5:	e9 42 ff ff ff       	jmp    63c <malloc+0x2c>
- 6fa:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
+ 705:	e9 42 ff ff ff       	jmp    64c <malloc+0x2c>
+ 70a:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
         prevp->s.ptr = p->s.ptr;
- 700:	8b 08                	mov    (%eax),%ecx
- 702:	89 0a                	mov    %ecx,(%edx)
- 704:	eb b9                	jmp    6bf <malloc+0xaf>
+ 710:	8b 08                	mov    (%eax),%ecx
+ 712:	89 0a                	mov    %ecx,(%edx)
+ 714:	eb b9                	jmp    6cf <malloc+0xaf>

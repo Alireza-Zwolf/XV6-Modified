@@ -91,6 +91,12 @@ sys_uptime(void)
 }
 
 int
+sys_get_parent_pid(void)
+{
+  return myproc()->parent->pid;
+}
+
+int
 sys_find_largest_prime_factor(void)
 {
   int n = myproc()->tf->edx;
@@ -123,4 +129,15 @@ sys_find_largest_prime_factor(void)
 
   // cprintf("sys_find_largest_prime_factor returning %d\n", maxPrime);
   return maxPrime;
+}
+
+int 
+sys_get_callers(void)
+{
+  int sys_call_number;
+  if (argint(0, &sys_call_number) < 0)
+    return -1;
+
+  get_callers(sys_call_number);
+  return 0;
 }

@@ -122,6 +122,8 @@ void            wakeup(void*);
 void            yield(void);
 void            push_callerp(int,int);
 void            get_callers(int);
+void            print_all_procs_status(void);
+
 
 // swtch.S
 void            swtch(struct context**, struct context*);

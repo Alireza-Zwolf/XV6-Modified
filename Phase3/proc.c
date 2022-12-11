@@ -567,3 +567,85 @@ void get_callers(int sys_call_number)
   }
   cprintf("%d", call_ps[sys_call_number].pids[size_of_callers-1]);
 }
+
+char* get_state_name(int state)
+{
+  if (state == 0) {
+    return "UNUSED";
+  }
+  else if (state == 1) {
+    return "EMBRYO";
+  }
+  else if (state == 2) {
+    return "SLEEPING";
+  }
+  else if (state == 3) {
+    return "RUNNABLE";
+  }
+  else if (state == 4) {
+    return "RUNNING";
+  }
+  else if (state == 5) {
+    return "ZOMBIE";
+  }
+  else {
+    return "";
+  }
+}
+
+
+int get_num_len(int number)
+{
+  int len = 0;
+  while (number > 0)
+  {
+    len++;
+    number = number / 10;
+  }
+  return len;
+}
+
+
+void print_all_procs_status()
+{
+  struct proc *p;
+
+  cprintf("name");
+  for (int i = 0 ; i < 10 ; i++)
+    cprintf(" ");
+
+  cprintf("pid");
+  for (int i = 0 ; i < 13 ; i++)
+    cprintf(" ");
+
+  cprintf("state");
+  for (int i = 0 ; i < 5 ; i++)
+    cprintf(" ");
+
+  cprintf("\n");
+  for (int i = 0 ; i < 38 ; i++)
+    cprintf("-");
+  cprintf("\n");
+
+  acquire(&ptable.lock);                                                  // Lock procs table to get current information (in order to stop procs table changing)
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ 
+    if (p->state == UNUSED)
+      continue;
+
+    cprintf(p->name);
+    for (int i = 0 ; i < 15 - strlen(p->name) ; i++)
+      cprintf(" ");
+
+    cprintf("%d", p->pid);
+    for (int i = 0 ; i < 15 - get_num_len(p->pid) ; i++)
+      cprintf(" ");
+
+    cprintf(get_state_name(p->state));
+    for (int i = 0 ; i < 15 - strlen(get_state_name(p->state)) ; i++)
+      cprintf(" "); 
+
+    cprintf("\n");
+  }
+  release(&ptable.lock);
+
+}

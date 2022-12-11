@@ -106,6 +106,7 @@ extern int sys_uptime(void);
 extern int sys_get_parent_pid(void);
 extern int sys_find_largest_prime_factor(void);
 extern int sys_get_callers(void);
+extern int sys_print_all_procs_status(void);
 
 
 static int (*syscalls[])(void) = {
@@ -133,6 +134,7 @@ static int (*syscalls[])(void) = {
 [SYS_get_parent_pid] sys_get_parent_pid,
 [SYS_find_largest_prime_factor] sys_find_largest_prime_factor,
 [SYS_get_callers] sys_get_callers,
+[SYS_print_all_procs_status]  sys_print_all_procs_status,
 };
 
 void 

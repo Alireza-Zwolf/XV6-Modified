@@ -141,3 +141,9 @@ sys_get_callers(void)
   get_callers(sys_call_number);
   return 0;
 }
+
+void
+sys_print_all_procs_status(void)
+{
+  print_all_procs_status();
+}

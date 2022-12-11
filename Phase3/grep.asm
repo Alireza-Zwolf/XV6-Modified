@@ -1011,13 +1011,16 @@ SYSCALL(get_callers)
  67a:	c3                   	ret    
 
 0000067b <print_all_procs_status>:
+SYSCALL(print_all_procs_status)
  67b:	b8 19 00 00 00       	mov    $0x19,%eax
  680:	cd 40                	int    $0x40
  682:	c3                   	ret    
- 683:	66 90                	xchg   %ax,%ax
- 685:	66 90                	xchg   %ax,%ax
- 687:	66 90                	xchg   %ax,%ax
- 689:	66 90                	xchg   %ax,%ax
+
+00000683 <set_proc_queue>:
+SYSCALL(set_proc_queue)
+ 683:	b8 1a 00 00 00       	mov    $0x1a,%eax
+ 688:	cd 40                	int    $0x40
+ 68a:	c3                   	ret    
  68b:	66 90                	xchg   %ax,%ax
  68d:	66 90                	xchg   %ax,%ax
  68f:	90                   	nop

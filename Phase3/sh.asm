@@ -2140,13 +2140,16 @@ SYSCALL(get_callers)
      eda:	c3                   	ret    
 
 00000edb <print_all_procs_status>:
+SYSCALL(print_all_procs_status)
      edb:	b8 19 00 00 00       	mov    $0x19,%eax
      ee0:	cd 40                	int    $0x40
      ee2:	c3                   	ret    
-     ee3:	66 90                	xchg   %ax,%ax
-     ee5:	66 90                	xchg   %ax,%ax
-     ee7:	66 90                	xchg   %ax,%ax
-     ee9:	66 90                	xchg   %ax,%ax
+
+00000ee3 <set_proc_queue>:
+SYSCALL(set_proc_queue)
+     ee3:	b8 1a 00 00 00       	mov    $0x1a,%eax
+     ee8:	cd 40                	int    $0x40
+     eea:	c3                   	ret    
      eeb:	66 90                	xchg   %ax,%ax
      eed:	66 90                	xchg   %ax,%ax
      eef:	90                   	nop

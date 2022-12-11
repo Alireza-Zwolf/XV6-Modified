@@ -570,29 +570,42 @@ void get_callers(int sys_call_number)
 
 char* get_state_name(int state)
 {
-  if (state == 0) {
+  if (state == 0)
     return "UNUSED";
-  }
-  else if (state == 1) {
+
+  else if (state == 1) 
     return "EMBRYO";
-  }
-  else if (state == 2) {
+  
+  else if (state == 2) 
     return "SLEEPING";
-  }
-  else if (state == 3) {
+  
+  else if (state == 3) 
     return "RUNNABLE";
-  }
-  else if (state == 4) {
+  
+  else if (state == 4) 
     return "RUNNING";
-  }
-  else if (state == 5) {
+  
+  else if (state == 5) 
     return "ZOMBIE";
-  }
-  else {
+  
+  else 
     return "";
-  }
 }
 
+char* get_queue_name(int level)
+{
+  if (level == 1)
+    return "RoundRobin";
+
+  else if (level == 2)
+    return "Lottery";
+
+  else if (level == 3)
+    return "BJF"; 
+
+  else
+    return "Undefined";
+}
 
 int get_num_len(int number)
 {
@@ -615,15 +628,19 @@ void print_all_procs_status()
     cprintf(" ");
 
   cprintf("pid");
-  for (int i = 0 ; i < 13 ; i++)
+  for (int i = 0 ; i < 6 ; i++)
     cprintf(" ");
 
   cprintf("state");
+  for (int i = 0 ; i < 8 ; i++)
+    cprintf(" ");
+
+  cprintf("queue_level");
   for (int i = 0 ; i < 5 ; i++)
     cprintf(" ");
 
   cprintf("\n");
-  for (int i = 0 ; i < 38 ; i++)
+  for (int i = 0 ; i < 50 ; i++)
     cprintf("-");
   cprintf("\n");
 
@@ -637,15 +654,31 @@ void print_all_procs_status()
       cprintf(" ");
 
     cprintf("%d", p->pid);
-    for (int i = 0 ; i < 15 - get_num_len(p->pid) ; i++)
+    for (int i = 0 ; i < 7 - get_num_len(p->pid) ; i++)
       cprintf(" ");
 
     cprintf(get_state_name(p->state));
     for (int i = 0 ; i < 15 - strlen(get_state_name(p->state)) ; i++)
       cprintf(" "); 
 
+    cprintf(get_queue_name(p->queue));
+    for (int i = 0 ; i < 15 - strlen(get_queue_name(p->state)) ; i++)
+      cprintf(" "); 
+
     cprintf("\n");
   }
   release(&ptable.lock);
 
+}
+
+void set_proc_queue(int pid, int queue_level)
+{
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    if (p->pid == pid)
+      p->queue = queue_level;
+
+  release(&ptable.lock);
 }

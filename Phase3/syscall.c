@@ -107,7 +107,7 @@ extern int sys_get_parent_pid(void);
 extern int sys_find_largest_prime_factor(void);
 extern int sys_get_callers(void);
 extern int sys_print_all_procs_status(void);
-
+extern int sys_set_proc_queue(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -135,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_find_largest_prime_factor] sys_find_largest_prime_factor,
 [SYS_get_callers] sys_get_callers,
 [SYS_print_all_procs_status]  sys_print_all_procs_status,
+[SYS_set_proc_queue] sys_set_proc_queue,
 };
 
 void 

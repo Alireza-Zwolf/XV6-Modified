@@ -123,6 +123,7 @@ void            yield(void);
 void            push_callerp(int,int);
 void            get_callers(int);
 void            print_all_procs_status(void);
+void            set_proc_queue(int , int);
 
 
 // swtch.S

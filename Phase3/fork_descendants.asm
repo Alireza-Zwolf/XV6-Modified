@@ -648,13 +648,16 @@ SYSCALL(get_callers)
  3da:	c3                   	ret    
 
 000003db <print_all_procs_status>:
+SYSCALL(print_all_procs_status)
  3db:	b8 19 00 00 00       	mov    $0x19,%eax
  3e0:	cd 40                	int    $0x40
  3e2:	c3                   	ret    
- 3e3:	66 90                	xchg   %ax,%ax
- 3e5:	66 90                	xchg   %ax,%ax
- 3e7:	66 90                	xchg   %ax,%ax
- 3e9:	66 90                	xchg   %ax,%ax
+
+000003e3 <set_proc_queue>:
+SYSCALL(set_proc_queue)
+ 3e3:	b8 1a 00 00 00       	mov    $0x1a,%eax
+ 3e8:	cd 40                	int    $0x40
+ 3ea:	c3                   	ret    
  3eb:	66 90                	xchg   %ax,%ax
  3ed:	66 90                	xchg   %ax,%ax
  3ef:	90                   	nop

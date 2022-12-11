@@ -63,6 +63,7 @@
 00000db0 atoi
 00000c60 strlen
 00000e63 open
+00000ee3 set_proc_queue
 00000cb0 strchr
 00000e8b mkdir
 00000e4b close

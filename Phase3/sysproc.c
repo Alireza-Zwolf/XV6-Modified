@@ -147,3 +147,13 @@ sys_print_all_procs_status(void)
 {
   print_all_procs_status();
 }
+
+
+void
+sys_set_proc_queue(void)
+{
+  int pid, queue_level;
+  argint(0, &pid);
+  argint(1, &queue_level);
+  set_proc_queue(pid, queue_level);
+}

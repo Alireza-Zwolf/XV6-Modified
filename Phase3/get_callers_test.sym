@@ -43,6 +43,7 @@
 00000270 atoi
 00000120 strlen
 00000323 open
+000003a3 set_proc_queue
 00000170 strchr
 0000034b mkdir
 0000030b close

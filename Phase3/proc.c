@@ -90,8 +90,18 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->queue = 2;                            // default queue: Lottery
+
+  p->queue = 2;                                 // default queue: Lottery
   p->creation_time = ticks;
+  p->executed_cycle = 0;
+
+  acquire(&tickslock);
+  p->priority = (ticks * ticks * 1021) % 100;   // generates a pseudorandom priority 
+  release(&tickslock);
+
+  p->priority_ratio = 1;
+  p->executed_cycle_ratio = 1;
+  p->creation_time_ratio = 1;
 
   release(&ptable.lock);
 
@@ -325,6 +335,51 @@ int wait(void)
   }
 }
 
+struct proc* best_job_first(void)
+{
+  struct proc* p;
+  struct proc* best_proc = 0;
+  float min_rank = 999999999;
+  float rank;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){ 
+    if (p->state != RUNNABLE)
+      continue;
+    else if (p->queue != 3) 
+      continue;
+    
+    rank =  (p->priority * p->priority_ratio) +
+            (p->creation_time * p->creation_time_ratio) +
+            (p->executed_cycle * p->executed_cycle_ratio);
+
+    if (rank < min_rank){
+      best_proc = p;
+      min_rank = rank;
+    }
+  }
+
+  return best_proc;
+}
+
+void aging(void)
+{
+  struct proc* p = 0;
+  long int cur = ticks;
+
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+
+    p->waited_cycles += 1;
+
+    if (p->state != RUNNABLE || p->queue == 1)
+      continue;
+
+    if (p->waited_cycles > 8000) {
+      p->queue = 1;
+      p->waited_cycles = 0;
+    }
+  }
+}
+
 // PAGEBREAK: 42
 //  Per-CPU process scheduler.
 //  Each CPU calls scheduler() after setting itself up.
@@ -399,6 +454,7 @@ void yield(void)
 {
   acquire(&ptable.lock); // DOC: yieldlock
   myproc()->state = RUNNABLE;
+  myproc()->executed_cycle += 0.1;
   sched();
   release(&ptable.lock);
 }

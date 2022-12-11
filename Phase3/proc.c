@@ -368,7 +368,6 @@ struct proc* best_job_first(void)
 void aging(void)
 {
   struct proc* p = 0;
-  long int cur = ticks;
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
 
@@ -846,4 +845,37 @@ void set_proc_lottery_ticket(int lottery_ticket , int pid){
       break;
     }
   }
+}
+
+void
+set_bjf_params(int pid, int priority_ratio, int arrival_time_ratio, int executed_cycle_ratio)
+{
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->pid == pid)
+    {
+      p->priority_ratio = priority_ratio;
+      p->arrival_time_ratio = arrival_time_ratio;
+      p->executed_cycle_ratio = executed_cycle_ratio; 
+    }
+  }
+  release(&ptable.lock); 
+}
+
+void
+set_all_bjf_params(int priority_ratio, int arrival_time_ratio, int executed_cycle_ratio)
+{
+  struct proc *p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+      p->priority_ratio = priority_ratio;
+      p->arrival_time_ratio = arrival_time_ratio;
+      p->executed_cycle_ratio = executed_cycle_ratio; 
+  }
+  release(&ptable.lock); 
 }

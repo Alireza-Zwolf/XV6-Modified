@@ -64,7 +64,8 @@ struct proc {
   int executed_cycle_ratio;    // used for calculating rank
   int waited_cycles;           // used for aging
   int lottery_ticket;          // lottery ticket of proc in queue 2
-  long int last_executed_time; // last executed time
+  long int last_executed_time; // last executed time        
+  int arrival_time_ratio;      // arrival time ratio
 };
 
 // Process memory is laid out contiguously, low addresses first:

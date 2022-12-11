@@ -125,6 +125,8 @@ void            get_callers(int);
 void            print_all_procs_status(void);
 void            set_proc_queue(int , int);
 void            set_proc_lottery_ticket(int , int);
+void            set_bjf_params(int, int, int, int);
+void            set_all_bjf_params(int, int, int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

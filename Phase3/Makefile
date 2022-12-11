@@ -188,6 +188,8 @@ UPROGS=\
 	_set_queue\
 	_foo\
 	_set_lottery_ticket\
+	_set_bjf\
+	_set_all_bjf\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -258,7 +260,7 @@ EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c wc.c zombie.c\
 	printf.c umalloc.c\
-	printf.c umalloc.c prime_numbers.c procs_status.c set_queue.c foo.c set_lottery_ticket.c\
+	printf.c umalloc.c _prime_numbers.c _procs_status.c _set_queue.c _foo.c _set_lottery_ticket.c _set_bjf_param.c _set_all_bjf\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

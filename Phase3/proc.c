@@ -90,6 +90,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->queue = 2;                            // default queue: Lottery
+  p->creation_time = ticks;
 
   release(&ptable.lock);
 
@@ -186,6 +188,7 @@ int fork(void)
   int i, pid;
   struct proc *np;
   struct proc *curproc = myproc();
+  curproc->creation_time = ticks;
 
   // Allocate process.
   if ((np = allocproc()) == 0)
@@ -622,25 +625,33 @@ int get_num_len(int number)
 void print_all_procs_status()
 {
   struct proc *p;
-
+  // cprintf("%d\n" , ticks);
   cprintf("name");
-  for (int i = 0 ; i < 10 ; i++)
+  for (int i = 0 ; i < 15 - strlen("name") ; i++)
     cprintf(" ");
 
   cprintf("pid");
-  for (int i = 0 ; i < 6 ; i++)
+  for (int i = 0 ; i < 10 - strlen("pid") ; i++)
     cprintf(" ");
 
   cprintf("state");
-  for (int i = 0 ; i < 8 ; i++)
+  for (int i = 0 ; i < 15 - strlen("state") ; i++)
     cprintf(" ");
 
   cprintf("queue_level");
-  for (int i = 0 ; i < 5 ; i++)
+  for (int i = 0 ; i < 15 - strlen("queue_level") ; i++)
+    cprintf(" ");
+
+  // cprintf("arrival");
+  // for (int i = 0 ; i < 15 - strlen("arrival") ; i++)
+  //   cprintf(" ");
+
+  cprintf("arrival");
+  for (int i = 0 ; i < 15 - strlen("arrival") ; i++)
     cprintf(" ");
 
   cprintf("\n");
-  for (int i = 0 ; i < 50 ; i++)
+  for (int i = 0 ; i < 60 ; i++)
     cprintf("-");
   cprintf("\n");
 
@@ -654,7 +665,7 @@ void print_all_procs_status()
       cprintf(" ");
 
     cprintf("%d", p->pid);
-    for (int i = 0 ; i < 7 - get_num_len(p->pid) ; i++)
+    for (int i = 0 ; i < 10 - get_num_len(p->pid) ; i++)
       cprintf(" ");
 
     cprintf(get_state_name(p->state));
@@ -662,8 +673,12 @@ void print_all_procs_status()
       cprintf(" "); 
 
     cprintf(get_queue_name(p->queue));
-    for (int i = 0 ; i < 15 - strlen(get_queue_name(p->state)) ; i++)
+    for (int i = 0 ; i < 15 - strlen(get_queue_name(p->queue)) ; i++)
       cprintf(" "); 
+
+    cprintf("%d" , p->creation_time);
+    for (int i = 0 ; i < 15 - get_num_len(p->creation_time) ; i++)
+      cprintf(" ");
 
     cprintf("\n");
   }

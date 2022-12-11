@@ -418,10 +418,27 @@ struct proc* lotterySched(void){
 
 }
 
+// Round Robin schedular
 
+struct proc* round_robin(void)
+{
+  struct proc *p;
+  struct proc *best_proc = 0;
 
+  int now = ticks;
+  int max_proc = -999999999;
 
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if (p->state != RUNNABLE || p->queue != ROUNDROBIN)
+        continue;
 
+      if(now - p->last_executed_time > max_proc){
+        max_proc = now - p->last_executed_time;
+        best_proc = p;
+      }
+  }
+  return best_proc;
+}
 
 
 // PAGEBREAK: 42
@@ -434,7 +451,7 @@ struct proc* lotterySched(void){
 //       via swtch back to the scheduler.
 void scheduler(void)
 {
-  struct proc *p;
+  struct proc *p = 0;
   struct cpu *c = mycpu();
   c->proc = 0;
 
@@ -445,25 +462,39 @@ void scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    {
-      if (p->state != RUNNABLE)
-        continue;
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
+    p = round_robin();
 
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
+    if (p == 0) {
+      p = lotterySched();
     }
+
+    if (p == 0) {
+      p = best_job_first();
+    }
+
+    if (p == 0) {
+      release(&ptable.lock);
+      continue;
+    }
+
+    aging();
+
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+    c->proc = p;
+    switchuvm(p);
+    p->state = RUNNING;
+    p->waited_cycles = 0;
+
+    swtch(&(c->scheduler), p->context);
+    switchkvm();
+
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    c->proc = 0;
+
     release(&ptable.lock);
   }
 }
@@ -499,6 +530,7 @@ void yield(void)
   acquire(&ptable.lock); // DOC: yieldlock
   myproc()->state = RUNNABLE;
   myproc()->executed_cycle += 0.1;
+  myproc()->last_executed_time = ticks;
   sched();
   release(&ptable.lock);
 }

@@ -91,9 +91,11 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
 
-  p->queue = 2;                                 // default queue: Lottery
+  p->queue = LOTTERY;                            // default queue: Lottery
   p->creation_time = ticks;
   p->executed_cycle = 0;
+  p->lottery_ticket = -1;                        // defualt ticket: 0
+
 
   acquire(&tickslock);
   p->priority = (ticks * ticks * 1021) % 100;   // generates a pseudorandom priority 
@@ -335,6 +337,8 @@ int wait(void)
   }
 }
 
+// BJF scheduler
+
 struct proc* best_job_first(void)
 {
   struct proc* p;
@@ -379,6 +383,46 @@ void aging(void)
     }
   }
 }
+
+// Lottery schedular
+
+int random_number_generator(int divisor)
+{
+  return (918273645 + ticks*ticks*ticks) % divisor;
+}
+
+
+struct proc* lotterySched(void){
+  struct proc *p;
+
+  int sum_lotteries_ticket = 1;
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != RUNNABLE || p->queue != LOTTERY)
+      continue;
+    sum_lotteries_ticket += p->lottery_ticket;
+  }
+
+  int random_ticket = random_number_generator(sum_lotteries_ticket);
+  
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != RUNNABLE || p->queue != LOTTERY)
+      continue;
+    random_ticket -= p->lottery_ticket;
+
+    if(random_ticket <= 0){
+      return p;
+    }
+  }
+  return 0;
+
+}
+
+
+
+
+
+
 
 // PAGEBREAK: 42
 //  Per-CPU process scheduler.
@@ -681,7 +725,7 @@ int get_num_len(int number)
 void print_all_procs_status()
 {
   struct proc *p;
-  // cprintf("%d\n" , ticks);
+  cprintf("\n");
   cprintf("name");
   for (int i = 0 ; i < 15 - strlen("name") ; i++)
     cprintf(" ");
@@ -698,16 +742,16 @@ void print_all_procs_status()
   for (int i = 0 ; i < 15 - strlen("queue_level") ; i++)
     cprintf(" ");
 
-  // cprintf("arrival");
-  // for (int i = 0 ; i < 15 - strlen("arrival") ; i++)
-  //   cprintf(" ");
-
   cprintf("arrival");
   for (int i = 0 ; i < 15 - strlen("arrival") ; i++)
     cprintf(" ");
 
+  cprintf("lottery_ticket");
+  for (int i = 0 ; i < 15 - strlen("lottery_ticket") ; i++)
+    cprintf(" ");
+
   cprintf("\n");
-  for (int i = 0 ; i < 60 ; i++)
+  for (int i = 0 ; i < 80 ; i++)
     cprintf("-");
   cprintf("\n");
 
@@ -736,8 +780,16 @@ void print_all_procs_status()
     for (int i = 0 ; i < 15 - get_num_len(p->creation_time) ; i++)
       cprintf(" ");
 
+    if(p->lottery_ticket == -1)
+      cprintf("N/A");
+    else
+      cprintf("%d" , p->lottery_ticket);
+    for (int i = 0 ; i < 15 - get_num_len(p->lottery_ticket) ; i++)
+      cprintf(" ");
+
     cprintf("\n");
   }
+  cprintf("\n");
   release(&ptable.lock);
 
 }
@@ -752,4 +804,14 @@ void set_proc_queue(int pid, int queue_level)
       p->queue = queue_level;
 
   release(&ptable.lock);
+}
+
+void set_proc_lottery_ticket(int lottery_ticket , int pid){
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(pid == p->pid){
+      p -> lottery_ticket = lottery_ticket;
+      break;
+    }
+  }
 }

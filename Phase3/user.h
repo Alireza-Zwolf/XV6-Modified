@@ -28,6 +28,7 @@ int find_largest_prime_factor(void);
 void get_callers(int syscall_number);
 void print_all_procs_status(void);
 void set_proc_queue(int , int);
+void set_proc_lottery_ticket(int , int);
 
 // ulib.c
 int stat(const char*, struct stat*);

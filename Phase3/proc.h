@@ -1,3 +1,6 @@
+#define LOTTERY 2
+
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID
@@ -58,6 +61,7 @@ struct proc {
   float executed_cycle;        // increasing 0.1 per cycle?
   int executed_cycle_ratio;    // used for calculating rank
   int waited_cycles;           // used for aging
+  int lottery_ticket;          // lottery ticket of proc in queue 2
 };
 
 // Process memory is laid out contiguously, low addresses first:

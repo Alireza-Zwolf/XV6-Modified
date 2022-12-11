@@ -25,3 +25,4 @@
 #define SYS_get_callers 24
 #define SYS_print_all_procs_status 25
 #define SYS_set_proc_queue 26
+#define SYS_set_proc_lottery_ticket 27

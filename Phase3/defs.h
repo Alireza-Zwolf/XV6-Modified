@@ -124,7 +124,7 @@ void            push_callerp(int,int);
 void            get_callers(int);
 void            print_all_procs_status(void);
 void            set_proc_queue(int , int);
-
+void            set_proc_lottery_ticket(int , int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

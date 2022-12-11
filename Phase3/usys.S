@@ -34,3 +34,5 @@ SYSCALL(find_largest_prime_factor)
 SYSCALL(get_callers)
 SYSCALL(print_all_procs_status)
 SYSCALL(set_proc_queue)
+SYSCALL(set_proc_lottery_ticket)
+

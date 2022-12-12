@@ -435,17 +435,11 @@ struct proc* round_robin(void)
   struct proc *p;
   struct proc *best_proc = 0;
 
-  // int now = ticks;
-  // int max_proc = -999999999;
 
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if (p->state != RUNNABLE || p->queue != ROUNDROBIN)
         continue;
 
-      // if(now - p->last_executed_time > max_proc){
-      //   max_proc = now - p->last_executed_time;
-      //   best_proc = p;
-      // }
       return p;
   }
   return best_proc;

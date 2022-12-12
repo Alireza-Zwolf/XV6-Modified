@@ -138,8 +138,10 @@ static int (*syscalls[])(void) = {
 [SYS_find_largest_prime_factor] sys_find_largest_prime_factor,
 [SYS_get_callers] sys_get_callers,
 [SYS_print_all_procs_status]  sys_print_all_procs_status,
+[SYS_set_proc_queue] sys_set_proc_queue,
 [SYS_set_proc_lottery_ticket] sys_set_proc_lottery_ticket,
 [SYS_set_bjf_params] sys_set_bjf_params,
+[SYS_set_all_bjf_params] sys_set_all_bjf_params
 };
 
 void 

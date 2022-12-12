@@ -57,15 +57,15 @@ struct proc {
 
   int queue;                   // 1: Round Robin queue    2: Lottery queue    3: BJF queue
   int priority;                // proc priority in queue
-  int priority_ratio;          // used for calculating rank
   long int creation_time;      // Arrival time
-  int creation_time_ratio;     // used for calculating rank
+  float priority_ratio;          // used for calculating rank
+  // float creation_time_ratio;     // used for calculating rank
   float executed_cycle;        // increasing 0.1 per cycle?
-  int executed_cycle_ratio;    // used for calculating rank
-  int waited_cycles;           // used for aging
+  float executed_cycle_ratio;    // used for calculating rank
+  float arrival_time_ratio;      // arrival time ratio
+  int waited_start_time;           // used for aging
   int lottery_ticket;          // lottery ticket of proc in queue 2
   long int last_executed_time; // last executed time        
-  int arrival_time_ratio;      // arrival time ratio
 };
 
 // Process memory is laid out contiguously, low addresses first:

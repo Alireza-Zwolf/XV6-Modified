@@ -93,17 +93,19 @@ found:
 
   p->queue = LOTTERY;                            // default queue: Lottery
   p->creation_time = ticks;
+  p->waited_start_time = p->creation_time;
   p->executed_cycle = 0;
-  p->lottery_ticket = -1;                        // defualt ticket: 0
+  p->lottery_ticket = 30;                        // defualt ticket: 30
 
 
   acquire(&tickslock);
   p->priority = (ticks * ticks * 1021) % 100;   // generates a pseudorandom priority 
   release(&tickslock);
 
-  p->priority_ratio = 1;
-  p->executed_cycle_ratio = 1;
-  p->creation_time_ratio = 1;
+  p->priority_ratio = 0.2;
+  p->executed_cycle_ratio = 0.2;
+  // p->creation_time_ratio = 0.2;
+  p->arrival_time_ratio = 0.2;
 
   release(&ptable.lock);
 
@@ -201,6 +203,7 @@ int fork(void)
   struct proc *np;
   struct proc *curproc = myproc();
   curproc->creation_time = ticks;
+  curproc->waited_start_time = curproc->creation_time;
 
   // Allocate process.
   if ((np = allocproc()) == 0)
@@ -339,6 +342,12 @@ int wait(void)
 
 // BJF scheduler
 
+int calculate_rank(struct proc* p){
+  return ((p->priority * p->priority_ratio) +
+          (p->creation_time * p->arrival_time_ratio) +
+          (p->executed_cycle * p->executed_cycle_ratio));
+}
+
 struct proc* best_job_first(void)
 {
   struct proc* p;
@@ -352,9 +361,7 @@ struct proc* best_job_first(void)
     else if (p->queue != 3) 
       continue;
     
-    rank =  (p->priority * p->priority_ratio) +
-            (p->creation_time * p->creation_time_ratio) +
-            (p->executed_cycle * p->executed_cycle_ratio);
+    rank =  calculate_rank(p);
 
     if (rank < min_rank){
       best_proc = p;
@@ -371,14 +378,18 @@ void aging(void)
 
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
 
-    p->waited_cycles += 1;
+    // p->waited_cycles = ticks - creation_tie;
 
-    if (p->state != RUNNABLE || p->queue == 1)
+    // if (p->state != RUNNABLE || p->queue == 1)
+    //   continue;
+
+    if (p->queue == 1)
       continue;
 
-    if (p->waited_cycles > 8000) {
+
+    if (ticks - p->creation_time > 1000) {
       p->queue = 1;
-      p->waited_cycles = 0;
+      p->waited_start_time = 0;
     }
   }
 }
@@ -424,17 +435,18 @@ struct proc* round_robin(void)
   struct proc *p;
   struct proc *best_proc = 0;
 
-  int now = ticks;
-  int max_proc = -999999999;
+  // int now = ticks;
+  // int max_proc = -999999999;
 
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if (p->state != RUNNABLE || p->queue != ROUNDROBIN)
         continue;
 
-      if(now - p->last_executed_time > max_proc){
-        max_proc = now - p->last_executed_time;
-        best_proc = p;
-      }
+      // if(now - p->last_executed_time > max_proc){
+      //   max_proc = now - p->last_executed_time;
+      //   best_proc = p;
+      // }
+      return p;
   }
   return best_proc;
 }
@@ -448,6 +460,8 @@ struct proc* round_robin(void)
 //   - swtch to start running that process
 //   - eventually that process transfers control
 //       via swtch back to the scheduler.
+
+/**/
 void scheduler(void)
 {
   struct proc *p = 0;
@@ -461,23 +475,20 @@ void scheduler(void)
 
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
-
     p = round_robin();
-
     if (p == 0) {
       p = lotterySched();
     }
-
     if (p == 0) {
       p = best_job_first();
     }
-
     if (p == 0) {
       release(&ptable.lock);
       continue;
     }
-
+    // cprintf("%d" , p->waited_cycles);
     aging();
+    
 
     // Switch to chosen process.  It is the process's job
     // to release ptable.lock and then reacquire it
@@ -485,7 +496,7 @@ void scheduler(void)
     c->proc = p;
     switchuvm(p);
     p->state = RUNNING;
-    p->waited_cycles = 0;
+    p->waited_start_time = 0;
 
     swtch(&(c->scheduler), p->context);
     switchkvm();
@@ -744,8 +755,11 @@ char* get_queue_name(int level)
 int get_num_len(int number)
 {
   int len = 0;
-  while (number > 0)
-  {
+
+  if (number == 0)
+    return 1;
+
+  while (number > 0){
     len++;
     number = number / 10;
   }
@@ -757,32 +771,44 @@ void print_all_procs_status()
 {
   struct proc *p;
   cprintf("\n");
-  cprintf("name");
+  cprintf("Name");
   for (int i = 0 ; i < 15 - strlen("name") ; i++)
     cprintf(" ");
 
-  cprintf("pid");
+  cprintf("Pid");
   for (int i = 0 ; i < 10 - strlen("pid") ; i++)
     cprintf(" ");
 
-  cprintf("state");
+  cprintf("State");
   for (int i = 0 ; i < 15 - strlen("state") ; i++)
     cprintf(" ");
 
-  cprintf("queue_level");
-  for (int i = 0 ; i < 15 - strlen("queue_level") ; i++)
+  cprintf("Queue_level");
+  for (int i = 0 ; i < 17 - strlen("queue_level") ; i++)
     cprintf(" ");
 
-  cprintf("arrival");
-  for (int i = 0 ; i < 15 - strlen("arrival") ; i++)
+  cprintf("Arrival");
+  for (int i = 0 ; i < 12 - strlen("arrival") ; i++)
     cprintf(" ");
 
-  cprintf("lottery_ticket");
-  for (int i = 0 ; i < 15 - strlen("lottery_ticket") ; i++)
+  cprintf("Lottery_ticket");
+  for (int i = 0 ; i < 18 - strlen("lottery_ticket") ; i++)
+    cprintf(" ");
+
+  cprintf("BJF_Rank");
+  for (int i = 0 ; i < 12 - strlen("bjf_Rank") ; i++)
+    cprintf(" ");
+
+  cprintf("p/e/a ratio*10");
+  for (int i = 0 ; i < 20 - strlen("p/e/a ratio*10") ; i++)
+    cprintf(" ");
+
+  cprintf("executed_cycles*10");
+  for (int i = 0 ; i < 20 - strlen("executed_cycles*10") ; i++)
     cprintf(" ");
 
   cprintf("\n");
-  for (int i = 0 ; i < 80 ; i++)
+  for (int i = 0 ; i < 140 ; i++)
     cprintf("-");
   cprintf("\n");
 
@@ -804,11 +830,11 @@ void print_all_procs_status()
       cprintf(" "); 
 
     cprintf(get_queue_name(p->queue));
-    for (int i = 0 ; i < 15 - strlen(get_queue_name(p->queue)) ; i++)
+    for (int i = 0 ; i < 17 - strlen(get_queue_name(p->queue)) ; i++)
       cprintf(" "); 
 
     cprintf("%d" , p->creation_time);
-    for (int i = 0 ; i < 15 - get_num_len(p->creation_time) ; i++)
+    for (int i = 0 ; i < 17 - get_num_len(p->creation_time) ; i++)
       cprintf(" ");
 
     if(p->lottery_ticket == -1)
@@ -816,6 +842,22 @@ void print_all_procs_status()
     else
       cprintf("%d" , p->lottery_ticket);
     for (int i = 0 ; i < 15 - get_num_len(p->lottery_ticket) ; i++)
+      cprintf(" ");
+
+    cprintf("%d" , calculate_rank(p));
+    for (int i = 0 ; i < 15 - get_num_len(calculate_rank(p)) ; i++)
+      cprintf(" ");
+
+    int pRate = p->priority_ratio * 10;
+    int eRate = p->executed_cycle_ratio * 10;
+    int aRate = p->arrival_time_ratio * 10;
+
+    cprintf("%d %d %d" , pRate , eRate , aRate);
+    for (int i = 0 ; i < 17 - (get_num_len(pRate) + get_num_len(eRate) + get_num_len(aRate)) ; i++)
+      cprintf(" ");
+
+    cprintf("%d" , p->executed_cycle * 10);
+    for (int i = 0 ; i < 15 - get_num_len(p->executed_cycle) ; i++)
       cprintf(" ");
 
     cprintf("\n");
@@ -831,9 +873,10 @@ void set_proc_queue(int pid, int queue_level)
 
   acquire(&ptable.lock);
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    if (p->pid == pid)
+    if (p->pid == pid){
       p->queue = queue_level;
-
+      p->waited_start_time = 0;
+    }
   release(&ptable.lock);
 }
 
@@ -847,8 +890,7 @@ void set_proc_lottery_ticket(int lottery_ticket , int pid){
   }
 }
 
-void
-set_bjf_params(int pid, int priority_ratio, int arrival_time_ratio, int executed_cycle_ratio)
+void set_bjf_params(int pid, int priority_ratio, int arrival_time_ratio, int executed_cycle_ratio)
 {
   struct proc *p;
 
@@ -865,8 +907,7 @@ set_bjf_params(int pid, int priority_ratio, int arrival_time_ratio, int executed
   release(&ptable.lock); 
 }
 
-void
-set_all_bjf_params(int priority_ratio, int arrival_time_ratio, int executed_cycle_ratio)
+void set_all_bjf_params(int priority_ratio, int arrival_time_ratio, int executed_cycle_ratio)
 {
   struct proc *p;
 

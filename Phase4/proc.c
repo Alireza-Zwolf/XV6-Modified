@@ -602,18 +602,73 @@ struct semaphore semaphores[SEMAPHORES_SIZE];
 
 int sem_init(int i, int v)
 {
-  // code here
+  acquire(&semaphores[i].lock);
+
+  if (semaphores[i].init == 1)
+  {
+    release(&semaphores[i].lock);
+    return -1;
+  }
+
+  semaphores[i].value = v;
+  semaphores[i].init = 1;
+  semaphores[i].queue.size = 0;
+  semaphores[i].queue.head = 0;
+  semaphores[i].queue.tail = 0;
+
+  release(&semaphores[i].lock);
   return 0;
 }
 
-int sem_acquire(int i)
+int sem_acquire(int i) // not sure if this is correct
 {
-  // code here
-  return 0;
+  
+  if (semaphores[i].init == 0)
+    return -1;
+
+  if (semaphores[i].value > 0) {
+    acquire(&semaphores[i].lock);
+    semaphores[i].value--;
+    release(&semaphores[i].lock);
+    return 0;
+  }
+
+  acquire(&semaphores[i].lock);
+  struct proc *p = myproc();
+  struct waiting_process wp = {.next = 0, .p = p};
+  if (semaphores[i].queue.head == 0) {
+    semaphores[i].queue.head = &wp;
+    semaphores[i].queue.tail = &wp;
+  } else {
+    semaphores[i].queue.tail->next = &wp;
+    semaphores[i].queue.tail = &wp;
+  }
+  semaphores[i].queue.size += 1;
+  sleep(p, &semaphores[i].lock);
+  semaphores[i].value--;
+  release(&semaphores[i].lock);
+  return 1;
 }
 
-int sem_release(int i)
+int sem_release(int i) // not sure if this is correct
 {
-  // code here
+  
+  if (semaphores[i].init == 0)
+    return -1;
+
+  if (semaphores[i].value < 0) {
+    return 1;
+  }
+
+  acquire(&semaphores[i].lock);
+  semaphores[i].value++;
+  if (semaphores[i].queue.size > 0) {
+    struct waiting_process *wp = semaphores[i].queue.head;
+    semaphores[i].queue.head = wp->next;
+    semaphores[i].queue.size -= 1;
+    wakeup(wp->p);
+  }
+
+  release(&semaphores[i].lock);
   return 0;
 }

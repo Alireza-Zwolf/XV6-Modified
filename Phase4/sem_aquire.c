@@ -12,12 +12,10 @@ int main (int argc, char *argv[])
     int i = atoi(argv[1]);
     int result = sem_acquire(i-1);
 
-    if (result > 0)
+    if (result == 0)
         printf(1, "process acquired semaphore\n");
-
-    else if (result == 0)
+    else if (result < 0)
         printf(1, "semaphore has not been initialized\n");
-
     else
         printf(1, "process added to semaphore queue\n");
 

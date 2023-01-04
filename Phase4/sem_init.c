@@ -17,7 +17,13 @@ int main(int argc, char *argv[]) {
         exit();
     }
 
-    sem_init(i-1,v); // i-1 because we want to use 0-4 as indices
+    int res;
+    res = sem_init(i-1,v);
+    
+    if (res == 0)
+        printf(1, "semaphore %d initialized with value %d\n", i, v);
+    else 
+        printf(1, "this semaphore is already initialized!\n");
 
     exit();
 } 

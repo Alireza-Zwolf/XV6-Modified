@@ -158,7 +158,7 @@ sys_sem_aquire(void)
   int i;
   if (argint(0, &i) < 0)
     return -1;
-  return sem_aquire(i);
+  return sem_acquire(i);
 }
 
 int

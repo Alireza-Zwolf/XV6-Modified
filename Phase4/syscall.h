@@ -23,3 +23,7 @@
 #define SYS_get_parent_pid 22
 #define SYS_find_largest_prime_factor 23
 #define SYS_get_callers 24
+#define SYS_dining_philosophers 25
+#define SYS_sem_init 26
+#define SYS_sem_aquire 27
+#define SYS_sem_release 28

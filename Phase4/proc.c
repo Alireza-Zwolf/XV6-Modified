@@ -567,3 +567,53 @@ void get_callers(int sys_call_number)
   }
   cprintf("%d", call_ps[sys_call_number].pids[size_of_callers-1]);
 }
+
+
+#define EATING 0
+#define HUNGRY 1
+#define THINKING 2
+#define SEMAPHORES_SIZE 5
+
+int state[5] = {1, 1, 1, 1, 1};
+int philosophers[5] = {0, 1, 2, 3, 4};
+
+struct waiting_process
+{
+  struct proc *p;
+  struct waiting_process *next;
+};
+
+struct waiting_queue
+{
+  int size;
+  struct waiting_process *head;
+  struct waiting_process *tail;
+};
+
+struct semaphore
+{
+  int value;
+  int init;
+  struct waiting_queue queue;
+  struct spinlock lock;
+};
+
+struct semaphore semaphores[SEMAPHORES_SIZE];
+
+int sem_init(int i, int v)
+{
+  // code here
+  return 0;
+}
+
+int sem_acquire(int i)
+{
+  // code here
+  return 0;
+}
+
+int sem_release(int i)
+{
+  // code here
+  return 0;
+}

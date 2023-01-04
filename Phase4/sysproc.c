@@ -141,3 +141,31 @@ sys_get_callers(void)
   get_callers(sys_call_number);
   return 0;
 }
+
+
+int
+sys_sem_init(void)
+{
+  int i, v;
+  if (argint(0, &i) < 0 || argint(1, &v) < 0)
+    return -1;
+  return sem_init(i, v);
+}
+
+int
+sys_sem_aquire(void)
+{
+  int i;
+  if (argint(0, &i) < 0)
+    return -1;
+  return sem_aquire(i);
+}
+
+int
+sys_sem_release(void)
+{
+  int i;
+  if (argint(0, &i) < 0)
+    return -1;
+  return sem_release(i);
+}

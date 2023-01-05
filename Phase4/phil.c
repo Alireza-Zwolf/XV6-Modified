@@ -2,45 +2,44 @@
 #include "user.h"
 #include "stat.h"
 
-#define THINKING 2
-#define HUNGRY 1
-#define EATING 0
-#define READ_FD 1
 
-// int state;
-int phNum;
+#define WRITE_FD 1
 
-// p0 0 p1 1 p2 2 p3 3 p4 4
+int semaphor_state = 0;
 
 int main(int argc, char **argv)
 {
-    phNum = atoi(argv[1]);
+    int phNum;
+    phNum = atoi(argv[0]);
 
     while (1) {
-        int i = phNum;
-        printf(READ_FD, "Philosopher number %d is thinking\n", phNum);
+        printf(WRITE_FD, "Philosopher %d is thinking\n", phNum);
 
         //THINKING
-        sleep(1);
+        sleep(2);
 
-        printf(READ_FD, "Philosopher number %d is hungry\n", phNum);
-        if (phNum%2) {
-            sem_acquire(i);
-            sem_acquire((i+4) % 5);
+        printf(WRITE_FD, "Philosopher %d is hungry\n", phNum);\
+        /* Even philasophers first take their right chopstick, then take left chopstick */
+        /* Odd philasophers first take their left chopstick, then take their right chopstick */
+        /* By using this roadmap, we won't encounter any deadlock */
+        if (phNum % 2 == 0) {           
+            semaphor_state = sem_acquire(phNum);
+            semaphor_state = sem_acquire((phNum+4) % 5);
         }
         else {
-            sem_acquire((i+4) % 5);
-            sem_acquire(i);
+            semaphor_state = sem_acquire((phNum+4) % 5);
+            semaphor_state = sem_acquire(phNum);
         }
         
-        printf(READ_FD, "Philosopher number %d is eating\n", phNum);
+        printf(WRITE_FD, "Philosopher %d is eating\n", phNum);
 
         //EATING
-        sleep(1);
-        printf(READ_FD, "Philosopher number %d is dropping forks\n", phNum);
-
+        sleep(2);
+        printf(WRITE_FD, "Philosopher %d is dropping chopsticks\n", phNum);
         //SLEEPING
-        sem_release(i);
-        sem_release((i+1) % 5);
+        semaphor_state = sem_release(phNum);
+        semaphor_state = sem_release((phNum+4) % 5);
+        // sleep(10);
     }
+    
 }

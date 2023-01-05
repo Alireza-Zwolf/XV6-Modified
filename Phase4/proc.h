@@ -1,3 +1,6 @@
+#define SEMAPHORES_SIZE 5
+
+
 // Per-CPU state
 struct cpu {
   uchar apicid;                // Local APIC ID

@@ -14,13 +14,10 @@
 #include "mmu.h"
 #include "proc.h"
 #include "x86.h"
+
 static void consputc(int);
 
 static int panicked = 0;
-
-char last_commands[15][30];                                           // previous entered commands
-int commands_size[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};              // size of each command
-int command_pointer = 0;                                              // pointer of where we should add commands
 
 static struct {
   struct spinlock lock;
@@ -141,6 +138,7 @@ cgaputc(int c)
   pos = inb(CRTPORT+1) << 8;
   outb(CRTPORT, 15);
   pos |= inb(CRTPORT+1);
+
   if(c == '\n')
     pos += 80 - pos%80;
   else if(c == BACKSPACE){
@@ -180,8 +178,6 @@ consputc(int c)
   cgaputc(c);
 }
 
-
-
 #define INPUT_BUF 128
 struct {
   char buf[INPUT_BUF];
@@ -192,128 +188,6 @@ struct {
 
 #define C(x)  ((x)-'@')  // Control-x
 
-
-// added functions
-void delete_numbers_in_current_line(){
-  char temp_buff[100];
-  int pointer = 0;
-  for(int i = input.w ; i < input.e ; i++){                       // read last command from buffer and omit numbers, then save it into ((temp_buff))
-    char temp = input.buf[i];                       
-    if(!(temp >= 48 && temp <= 57)){
-      temp_buff[pointer] = temp;
-      pointer++;
-    }
-    input.buf[i] = 0;
-    consputc(BACKSPACE);
-  }
-  input.e = input.w;
-  for(int i = 0 ; i < pointer ; i++){
-    input.buf[input.e] = temp_buff[i];                            // put temp_buff in buffer and print it on the console
-    consputc(temp_buff[i]);
-    input.e++;
-  }
-}
-
-
-void reverse_row(){
-  char temp_buff[100];
-  int counter = 0;
-  for(int i = input.w ; i < input.e ; i++){                         // read last command from buffer and save it into ((temp_buff))
-    char temp = input.buf[i];
-    temp_buff[counter] = temp;
-    counter++;
-    input.buf[i] = 0;
-    consputc(BACKSPACE);
-  }
-
-  input.e = input.w;
-  for(int i = counter - 1 ; i >= 0 ; i--){                          // put temp_buff reversly in buffer and print it on the console
-    input.buf[input.e] = temp_buff[i];
-    consputc(temp_buff[i]);
-    input.e++;
-  }
-}
-
-void save_command(char buffer[] , int buffer_size){                 
-  int counter = 0;
-  for(int i = input.w ; i < input.e ; i++){
-    last_commands[command_pointer %15][counter] = buffer[i];
-    counter++;
-  }
-  commands_size[command_pointer % 15] = buffer_size - 1;
-  command_pointer += 1;
-}
-
-
-void recommend_command(){
-  char current_buff[100];
-  int counter = 0;
-  for(int i = input.w ; i < input.e ; i++){
-    current_buff[counter] = input.buf[i];
-    input.buf[i] = 0;
-    consputc(BACKSPACE);
-    counter++;
-  }
-  int current_buff_size = input.e - input.w;
-  input.e = input.w;
-  int recommended_successfully = 0;
-  int i; int j;
-  for(i = (command_pointer % 15) - 1; i >= 0 ; i--){
-    if(current_buff_size >= commands_size[i]){
-      break;
-    }
-    for(j = 0 ; j < current_buff_size ; j++){
-      if(current_buff[j] == last_commands[i][j]){
-        if(j == current_buff_size - 1){
-          recommended_successfully = 1;
-          break;
-        }
-      }
-      else
-        break;
-    }
-    if(recommended_successfully)
-      break;
-  }
-  if(command_pointer >= 15 && recommended_successfully == 0){
-    for(i = 14; i >= (command_pointer % 15) ; i--){
-    if(current_buff_size >= commands_size[i]){
-      break;
-    }
-    for(j = 0 ; j < current_buff_size ; j++){
-      if(current_buff[j] == last_commands[i][j]){
-        if(j == current_buff_size - 1){
-          recommended_successfully = 1;
-          break;
-        }
-      }
-      else
-        break;
-    }
-    if(recommended_successfully)
-      break;
-  }
-  }
-  if(recommended_successfully){
-    for(int x = 0 ; x < commands_size[i] ; x++){
-      input.buf[input.e] = last_commands[i][x];
-      consputc(last_commands[i][x]);
-      input.e++;
-    }
-  }
-  else{
-    for(int x = 0 ; x < current_buff_size ; x++){
-      input.buf[input.e] = current_buff[x];
-      consputc(current_buff[x]);
-      input.e++;
-    }
-  }
-}
-
-
-// end added functions
-
-
 void
 consoleintr(int (*getc)(void))
 {
@@ -322,15 +196,6 @@ consoleintr(int (*getc)(void))
   acquire(&cons.lock);
   while((c = getc()) >= 0){
     switch(c){
-    case C('N'):
-      delete_numbers_in_current_line();
-      break;
-    case C('R'):
-      reverse_row();
-      break;
-    case '\t': // case '\x09':
-      recommend_command();
-      break;
     case C('P'):  // Process listing.
       // procdump() locks cons.lock indirectly; invoke later
       doprocdump = 1;
@@ -354,8 +219,6 @@ consoleintr(int (*getc)(void))
         input.buf[input.e++ % INPUT_BUF] = c;
         consputc(c);
         if(c == '\n' || c == C('D') || input.e == input.r+INPUT_BUF){
-          int buff_size1 = input.e - input.w;
-          save_command(input.buf , buff_size1);
           input.w = input.e;
           wakeup(&input.r);
         }

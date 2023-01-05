@@ -122,7 +122,6 @@ void            wakeup(void*);
 void            yield(void);
 void            push_callerp(int,int);
 void            get_callers(int);
-void            dining_philosophers();
 int             sem_init(int, int);
 int             sem_acquire(int);
 int             sem_release(int);

@@ -575,7 +575,7 @@ void get_callers(int sys_call_number)
 #define SEMAPHORES_SIZE 5
 
 int state[5] = {1, 1, 1, 1, 1};
-int philosophers[5] = {0, 1, 2, 3, 4};
+/* int philosophers[5] = {0, 1, 2, 3, 4};
 
 struct waiting_process
 {
@@ -596,11 +596,18 @@ struct semaphore
   int init;
   struct waiting_queue queue;
   struct spinlock lock;
+}; */
+
+struct semaphore
+{
+  int value;
+  int init;
+  struct spinlock lock;
 };
 
 struct semaphore semaphores[SEMAPHORES_SIZE];
 
-int sem_init(int i, int v)
+/* int sem_init(int i, int v)
 {
   acquire(&semaphores[i].lock);
 
@@ -618,9 +625,23 @@ int sem_init(int i, int v)
 
   release(&semaphores[i].lock);
   return 0;
+} */
+
+int sem_init(int i, int v)
+{
+  if (semaphores[i].init == 1)
+    return -1;
+
+  acquire(&semaphores[i].lock);
+
+  semaphores[i].value = v;
+  semaphores[i].init = 1;
+
+  release(&semaphores[i].lock);
+  return 0;
 }
 
-int sem_acquire(int i) // not sure if this is correct
+/* int sem_acquire(int i) // not sure if this is correct
 {
   
   if (semaphores[i].init == 0)
@@ -648,9 +669,35 @@ int sem_acquire(int i) // not sure if this is correct
   semaphores[i].value--;
   release(&semaphores[i].lock);
   return 1;
+} */
+
+int sem_acquire(int i)
+{
+  
+  if (semaphores[i].init == 0)
+    return -1;
+
+  // while (1) {
+  //   acquire(&semaphores[i].lock);
+  //   if (semaphores[i].value > 0) {
+  //     semaphores[i].value--;
+  //     release(&semaphores[i].lock);
+  //     return 0;
+  //   }
+  //   release(&semaphores[i].lock);
+  // }
+
+  acquire(&semaphores[i].lock);
+  while (semaphores[i].value <= 0) {
+    sleep(&semaphores[i], &semaphores[i].lock);
+  }
+  semaphores[i].value--;
+  
+  release(&semaphores[i].lock);
+  return 1;
 }
 
-int sem_release(int i) // not sure if this is correct
+/* int sem_release(int i) // not sure if this is correct
 {
   
   if (semaphores[i].init == 0)
@@ -669,6 +716,18 @@ int sem_release(int i) // not sure if this is correct
     wakeup(wp->p);
   }
 
+  release(&semaphores[i].lock);
+  return 0;
+} */
+
+int sem_release(int i)
+{
+  if (semaphores[i].init == 0)
+    return -1;
+
+  acquire(&semaphores[i].lock);
+  semaphores[i].value++;
+  wakeup(&semaphores[i]);
   release(&semaphores[i].lock);
   return 0;
 }

@@ -153,7 +153,7 @@ sys_sem_init(void)
 }
 
 int
-sys_sem_aquire(void)
+sys_sem_acquire(void)
 {
   int i;
   if (argint(0, &i) < 0)

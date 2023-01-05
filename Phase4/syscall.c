@@ -107,7 +107,7 @@ extern int sys_get_parent_pid(void);
 extern int sys_find_largest_prime_factor(void);
 extern int sys_get_callers(void);
 extern int sys_sem_init(void);
-extern int sys_sem_aquire(void);
+extern int sys_sem_acquire(void);
 extern int sys_sem_release(void);
 
 
@@ -137,7 +137,7 @@ static int (*syscalls[])(void) = {
 [SYS_find_largest_prime_factor] sys_find_largest_prime_factor,
 [SYS_get_callers] sys_get_callers,
 [SYS_sem_init] sys_sem_init,
-[SYS_sem_aquire] sys_sem_aquire,
+[SYS_sem_acquire] sys_sem_acquire,
 [SYS_sem_release] sys_sem_release,
 };
 

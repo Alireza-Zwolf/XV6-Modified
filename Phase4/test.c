@@ -24,8 +24,8 @@ int main()
     }
     for (int i = 0; i < PHILS_COUNT; i++)
       wait();
-      
-    return 0;
+
+    exit(); 
 }
 
 

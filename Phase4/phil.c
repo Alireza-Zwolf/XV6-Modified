@@ -41,5 +41,6 @@ int main(int argc, char **argv)
         semaphor_state = sem_release((phNum+4) % 5, phNum);
         // sleep(10);
     }
+    exit();
     
 }

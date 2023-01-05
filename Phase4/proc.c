@@ -581,7 +581,7 @@ int sem_acquire(int i, int owner)
   release(&semaphores[i].lock);
   // cprintf(" sec6  ");
   /* 
-  cprintf("%d:%d, %d:%d, %d:%d, %d:%d, %d:%d\n", 
+  cprintf("chopstick status: %d:%d, %d:%d, %d:%d, %d:%d, %d:%d\n", 
           0, semaphore_owner[0], 
           1, semaphore_owner[1], 
           2, semaphore_owner[2], 

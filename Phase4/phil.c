@@ -12,11 +12,11 @@ int main(int argc, char **argv)
     int phNum;
     phNum = atoi(argv[0]);
 
-    for (int round = 0; round < 4; round++) {
+    for (int round = 0; round < 100; round++) {
         printf(WRITE_FD, "Philosopher %d is thinking\n", phNum);
 
         //THINKING
-        sleep(200);
+        sleep(1);
 
         printf(WRITE_FD, "Philosopher %d is hungry\n", phNum);\
         /* Even philasophers first take their right chopstick, then take left chopstick */
@@ -33,10 +33,10 @@ int main(int argc, char **argv)
         
         printf(WRITE_FD, "Philosopher %d is eating\n", phNum);
 
-        //EATING
-        sleep(100);
+        // EATING
+        sleep(1);
         printf(WRITE_FD, "Philosopher %d is dropping chopsticks\n", phNum);
-        //SLEEPING
+        // SLEEPING
         semaphor_state = sem_release(phNum, phNum);
         semaphor_state = sem_release((phNum+4) % 5, phNum);
         // sleep(10);

@@ -1,12 +1,24 @@
 #include "types.h"
-#include "stat.h"
 #include "user.h"
-#include "fcntl.h"
+#include "stat.h"
 
-
-int
-main(int argc, char *argv[])
+#define PHILS_COUNT 5
+ 
+int main()
 {
-  print_all_proc();
-  exit();
+    for (int i = 0; i < PHILS_COUNT; i++)
+        sem_init(i, 1);
+
+    for (int i = 0; i < PHILS_COUNT; i++)
+    {
+      char id[] = {i+'0', '\0'};
+      char * argv[] = {"phil", id, '\0'};
+      int pid = fork();
+      if (pid == 0) 
+      {
+        exec("phil", argv);
+        exit();
+      }
+    }
+  return 0;
 }

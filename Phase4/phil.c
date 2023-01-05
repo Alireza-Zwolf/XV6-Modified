@@ -12,33 +12,33 @@ int main(int argc, char **argv)
     int phNum;
     phNum = atoi(argv[0]);
 
-    while (1) {
+    for (int round = 0; round < 4; round++) {
         printf(WRITE_FD, "Philosopher %d is thinking\n", phNum);
 
         //THINKING
-        sleep(2);
+        sleep(200);
 
         printf(WRITE_FD, "Philosopher %d is hungry\n", phNum);\
         /* Even philasophers first take their right chopstick, then take left chopstick */
         /* Odd philasophers first take their left chopstick, then take their right chopstick */
         /* By using this roadmap, we won't encounter any deadlock */
         if (phNum % 2 == 0) {           
-            semaphor_state = sem_acquire(phNum);
-            semaphor_state = sem_acquire((phNum+4) % 5);
+            semaphor_state = sem_acquire(phNum, phNum);
+            semaphor_state = sem_acquire((phNum+4) % 5, phNum);
         }
         else {
-            semaphor_state = sem_acquire((phNum+4) % 5);
-            semaphor_state = sem_acquire(phNum);
+            semaphor_state = sem_acquire((phNum+4) % 5, phNum);
+            semaphor_state = sem_acquire(phNum, phNum);
         }
         
         printf(WRITE_FD, "Philosopher %d is eating\n", phNum);
 
         //EATING
-        sleep(2);
+        sleep(100);
         printf(WRITE_FD, "Philosopher %d is dropping chopsticks\n", phNum);
         //SLEEPING
-        semaphor_state = sem_release(phNum);
-        semaphor_state = sem_release((phNum+4) % 5);
+        semaphor_state = sem_release(phNum, phNum);
+        semaphor_state = sem_release((phNum+4) % 5, phNum);
         // sleep(10);
     }
     

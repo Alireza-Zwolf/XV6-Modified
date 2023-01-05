@@ -534,7 +534,6 @@ procdump(void)
   }
 }
 
-
 struct semaphore
 {
   int value;
@@ -543,6 +542,7 @@ struct semaphore
 };
 
 struct semaphore semaphores[SEMAPHORES_SIZE];
+int semaphore_owner[SEMAPHORES_SIZE] = {-1, -1, -1, -1, -1};
 
 int sem_init(int i, int v)
 {
@@ -558,7 +558,7 @@ int sem_init(int i, int v)
   return 0;
 }
 
-int sem_acquire(int i)
+int sem_acquire(int i, int owner)
 {
 
   if (semaphores[i].init == 0)
@@ -575,15 +575,24 @@ int sem_acquire(int i)
   
   // cprintf("acquire sem value before: %d\n" , semaphores[i].value);
   semaphores[i].value--;
+  semaphore_owner[i] = owner;
   // cprintf("acquire sem value after: %d\n" , semaphores[i].value);
   // cprintf(" sec5  ");
   release(&semaphores[i].lock);
   // cprintf(" sec6  ");
+  /* 
+  cprintf("%d:%d, %d:%d, %d:%d, %d:%d, %d:%d\n", 
+          0, semaphore_owner[0], 
+          1, semaphore_owner[1], 
+          2, semaphore_owner[2], 
+          3, semaphore_owner[3], 
+          4, semaphore_owner[4]); 
+  */
   return 0;
 }
 
 
-int sem_release(int i)
+int sem_release(int i, int owner)
 {
   if (semaphores[i].init == 0)
     return -1;
@@ -591,8 +600,17 @@ int sem_release(int i)
   acquire(&semaphores[i].lock);
   // cprintf("release sem value before: %d\n" , semaphores[i].value);
   semaphores[i].value++;
+  semaphore_owner[i] = -1;
   // cprintf("release sem value after: %d\n" , semaphores[i].value);
   wakeup(&semaphores[i]);
   release(&semaphores[i].lock);
+  /* 
+  cprintf("%d:%d, %d:%d, %d:%d, %d:%d, %d:%d\n", 
+          0, semaphore_owner[0], 
+          1, semaphore_owner[1], 
+          2, semaphore_owner[2], 
+          3, semaphore_owner[3], 
+          4, semaphore_owner[4]); 
+  */
   return 0;
 }

@@ -121,8 +121,8 @@ int             wait(void);
 void            wakeup(void*);
 void            yield(void);
 int             sem_init(int, int);
-int             sem_acquire(int);
-int             sem_release(int);
+int             sem_acquire(int, int);
+int             sem_release(int, int);
 
 
 // swtch.S

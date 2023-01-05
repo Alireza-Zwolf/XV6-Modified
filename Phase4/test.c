@@ -13,7 +13,7 @@ int main()
     
     for (int i = 0; i < PHILS_COUNT; i++)
     {
-    //   sleep(2);
+      sleep(250);
       char id[] = {i + '0', '\0'};
       char * argv[] = {id};
       int pid = fork();
@@ -23,7 +23,11 @@ int main()
         exit();
       }
     }
-  return 0;
+
+    for (int i = 0; i < PHILS_COUNT; i++)
+      wait();
+
+    return 0;
 }
 
 

@@ -102,17 +102,21 @@ sys_sem_init(void)
 int
 sys_sem_acquire(void)
 {
-  int i;
+  int i, owner;
   if (argint(0, &i) < 0)
     return -1;
-  return sem_acquire(i);
+  if (argint(1, &owner) < 0)
+    return -1;
+  return sem_acquire(i, owner);
 }
 
 int
 sys_sem_release(void)
 {
-  int i;
+  int i, owner;
   if (argint(0, &i) < 0)
     return -1;
-  return sem_release(i);
+  if (argint(1, &owner) < 0)
+    return -1;
+  return sem_release(i, owner);
 }

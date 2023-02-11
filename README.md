@@ -16,7 +16,7 @@ A modified [xv6 operating system](https://github.com/mit-pdos/xv6-public) with s
         - [Part 2: Dining Philosophers Problem]()
 - [How to use?]()
 
-## New Features
+
 
 ## Phase1: Introduction to xv6
 
@@ -40,6 +40,13 @@ Following shortcuts are added to console:
 ```text
 prime_numbers 20 50
 ```
+
+
+## Phase2: System Calls
+
+- `find_largest_prime_factor` system call finds the largest prime factor of a given number. The parameter should be passed in the `edx` register. A sample use of this system call is provided in `find_largest_prime_factor` user program.
+- `get_callers` system call returns history of the callers of used system calls.
+- `get_parent_id` system call returns process ID of parent of the current process. A sample use of this system call is provided in `fork_descendants` user program.
 
 
 

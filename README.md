@@ -15,3 +15,33 @@ A modified [xv6 operating system](https://github.com/mit-pdos/xv6-public) with s
         - [Part 1: Semaphore Implementation]()
         - [Part 2: Dining Philosophers Problem]()
 - [How to use?]()
+
+## New Features
+
+## Phase1: Introduction to xv6
+
+### Part 1: Boot Message
+The names of this project contributers is displayed when xv6 boots up.
+```text
+1. Alireza Arbabi
+2. AmirAli Vahidi
+3. Hadi Babaloo
+```
+
+### Part 2: Shell Features
+Following shortcuts are added to console:
+- `CTRL+R` : Removes digits from current line
+- `CTRL+N` : Reverses current line
+- `Tab`    : Filling out current line with the best option from last 15 used commands
+
+### Part 3: User Program
+`Prime Numbers` user program added to system which finds prime numbers in the given range and puts them in `prime_numbers.txt` file.
+
+```text
+prime_numbers 20 50
+```
+
+
+
+
+

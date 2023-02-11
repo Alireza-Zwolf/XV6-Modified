@@ -2,18 +2,18 @@
 A modified [xv6 operating system](https://github.com/mit-pdos/xv6-public) with several extra features. xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix Version 6 (v6).
 
 - [New Features]()
-    - [Phase1: Introduction to xv6]() 
-        - [Part 1: Boot Message]() 
-        - [Part 2: Shell Features]() 
-        - [Part 3: User Program]()
-    - [Phase2: System Calls]()
-    - [Phase3: CPU Scheduling]()
-        - [Part 1: Multi-Level Feedback Queue]()
-        - [Part 2: Aging]()
-        - [Part 3: System Calls]()
-    - [Phase4: Synchronization]()
-        - [Part 1: Semaphore Implementation]()
-        - [Part 2: Dining Philosophers Problem]()
+    - [Phase1: Introduction to xv6](#phase1-introduction-to-xv6) 
+        - [Part 1: Boot Message](#part-1-boot-message) 
+        - [Part 2: Shell Features](#part-2-shell-features) 
+        - [Part 3: User Program](#part-3-user-program)
+    - [Phase2: System Calls](#phase2-system-calls)
+    - [Phase3: CPU Scheduling](#phase3-cpu-scheduling)
+        - [Part 1: Multi-Level Feedback Queue](#part-1-multi-level-feedback-queue)
+        - [Part 2: Aging](#part-2-aging)
+        - [Part 3: System Calls](#part-3-system-calls)
+    - [Phase4: Synchronization](#phase4-synchronization)
+        - [Part 1: Semaphore Implementation](#part-1-semaphore-implementation)
+        - [Part 2: Dining Philosophers Problem](#part-2-dining-philosophers-problem)
 - [How to use?]()
 
 
@@ -49,6 +49,21 @@ prime_numbers 20 50
 - `get_parent_id` system call returns process ID of parent of the current process. A sample use of this system call is provided in `fork_descendants` user program.
 
 
+## Phase3: CPU Scheduling
+
+### Part 1: Multi-Level Feedback Queue
+The following three scheduling algorithms were implemented in the program, which will be executed in order of priority:
+1. Round Robin(RR)
+2. Lottery
+3. Best Job First(BJF)
+
+### Part 2: Aging
+
+### Part 3: System Calls
 
 
+## Phase4: Synchronization
 
+### Part 1: Semaphore Implementation
+
+### Part 2: Dining Philosophers Problem

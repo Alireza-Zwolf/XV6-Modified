@@ -14,7 +14,7 @@ A modified [xv6 operating system](https://github.com/mit-pdos/xv6-public) with s
     - [Phase4: Synchronization](#phase4-synchronization)
         - [Part 1: Semaphore Implementation](#part-1-semaphore-implementation)
         - [Part 2: Dining Philosophers Problem](#part-2-dining-philosophers-problem)
-- [How to use?]()
+- [How to use?](#how-to-use)
 
 
 
@@ -58,7 +58,7 @@ The following three scheduling algorithms were implemented in the program, which
 3. Best Job First(BJF)
 
 ### Part 2: Aging
-To prevent process ***starvation***, we use the ***aging*** algorithm. In this implementation, if after 10000 cycles the processor was not assigned to the process, that process will be transferred to a queue with higher priority and monitoring the number of unexecuted cycles of that process will start from the beginning.
+To prevent process ***starvation***, we use the ***aging*** algorithm. In this implementation, if after 10000 cycles the processor was not assigned to the process, that process will be transferred to a queue with higher priority, and monitoring the number of unexecuted cycles of that process will start from the beginning.
 
 
 ### Part 3: System Calls
@@ -79,12 +79,22 @@ rank = (Priority * PriorityRatio) + (ArrivalTime * ArrivalTimeRatio) + (Executed
 ## Phase4: Synchronization
 
 ### Part 1: Semaphore Implementation
-__Counting Semaphore__ was implemented in this part.This type of semaphore allows certain number of processes to be in their critical section simultaneously.If maximum number of processes that are allowed to be in critical section has been reached, the processors that were not allowed to enter it go to sleep mode and are placed in the FIFO queue. Then, after one of the processes has left the critical section, remove the processes from the queue in the order of their entry time and allow them to enter their critical section.
-User-level programs can access to semaphor using folowing system calls:
+__Counting Semaphores__ is implemented in this part. This type of semaphore allows a certain number of processes to enter into a critical section simultaneously. If the maximum number of processes that are allowed to be in the critical section has been reached, the processes that are not allowed to enter will go to sleep mode and will be placed in the FIFO queue. After one of the processes leave the critical section, a processes with the most priority will enter to the critical section. 
+User-level programs can access to semaphore using folowing system calls:
 - `sem_init(i,v)`: The semaphore creates critical section in i index of the array with number v for the maximum number of processes.
 - `sem_acquire(i)`: This system call is used when a process wants to enter the critical section.
-- `sem_release(i)`: This system call is used when a process wants to quit its critical section.
+- `sem_release(i)`: This system call is used when a process wants to exit from the critical section.
 
 ### Part 2: Dining Philosophers Problem
-Simulate solving ***Dining Philosophers Problem*** using above semaphore algorithm.You can run it using `test` command in console.
+The Dining Philosophers Problem is a classic synchronization problem in computer science, which illustrates the challenge of coordinating multiple concurrent processes in a shared resource environment. In this problem, there are five philosophers sitting around a circular table, and each philosopher alternates between thinking and eating. There are five chopsticks placed between each pair of adjacent philosophers, and each philosopher needs two chopsticks to eat.
 
+The challenge is to avoid deadlocks and resource starvation, while ensuring that all philosophers get to eat. In this section, we used semaphores to solve this problem using functions discussed in part 4.1 .
+
+## How to use?
+We recommend you to use a virtual environment on the linux to setup the xv6, like QEMU. Follow these steps to run this repo using QEMU:
+- navigate to the desire phase of the project
+- open the terminal
+- run the following command:
+```text
+make qemu-nox
+```

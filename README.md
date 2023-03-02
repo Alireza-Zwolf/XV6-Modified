@@ -58,12 +58,32 @@ The following three scheduling algorithms were implemented in the program, which
 3. Best Job First(BJF)
 
 ### Part 2: Aging
+To prevent process ***starvation***, we use the ***aging*** algorithm. In this implementation, if after 10000 cycles the processor was not assigned to the process, that process will be transferred to a queue with higher priority and monitoring the number of unexecuted cycles of that process will start from the beginning.
+
 
 ### Part 3: System Calls
-
+- `set_proc_queue` system call sets the proccess queue or changing it's queue using *PID* and *Destination Queue Number* as inputs.
+- `set_proc_lottery_ticket` system call assigns tickets to the second queue processes to make this queue runnable.It takes PID of the process and its related amount of tickets.
+- `set_bjf` system call changes the parameters of bjf in process level.Its inputs are *PID* of the process and *coefficient* of the following equation:
+``` text
+rank = (Priority * PriorityRatio) + (ArrivalTime * ArrivalTimeRatio) + (ExecutedCycle * ExecutedCycleRatio)
+```
+- `set_all_bjf` system call changes the parameter of bjf for all processes.Its input is *coefficient* of the following equation:
+``` text
+rank = (Priority * PriorityRatio) + (ArrivalTime * ArrivalTimeRatio) + (ExecutedCycle * ExecutedCycleRatio)
+```
+- `procs_status` system call prints a list of all processes with their *pid,state,queue_level,arrival_time,number_of_lottery_tickets,coefficient,rank & number_of_cycles*.
+***note:*** to reach better test results, you can run `foo&` command befor calling this system call.*foo* is a user-level program that creats several number of processes that do *CPU Intensive* jobs.
 
 ## Phase4: Synchronization
 
 ### Part 1: Semaphore Implementation
+__Counting Semaphore__ was implemented in this part.This type of semaphore allows certain number of processes to be in their critical section simultaneously.If maximum number of processes that are allowed to be in critical section has been reached, the processors that were not allowed to enter it go to sleep mode and are placed in the FIFO queue. Then, after one of the processes has left the critical section, remove the processes from the queue in the order of their entry time and allow them to enter their critical section.
+User-level programs can access to semaphor using folowing system calls:
+- `sem_init(i,v)`: The semaphore creates critical section in i index of the array with number v for the maximum number of processes.
+- `sem_acquire(i)`: This system call is used when a process wants to enter the critical section.
+- `sem_release(i)`: This system call is used when a process wants to quit its critical section.
 
 ### Part 2: Dining Philosophers Problem
+Simulate solving ***Dining Philosophers Problem*** using above semaphore algorithm.You can run it using `test` command in console.
+

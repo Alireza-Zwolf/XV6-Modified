@@ -79,7 +79,7 @@ rank = (Priority * PriorityRatio) + (ArrivalTime * ArrivalTimeRatio) + (Executed
 ## Phase4: Synchronization
 
 ### Part 1: Semaphore Implementation
-__Counting Semaphores__ is implemented in this part. This type of semaphore allows a certain number of processes to enter into a critical section simultaneously. If the maximum number of processes that are allowed to be in the critical section has been reached, the processes that are not allowed to enter will go to sleep mode and will be placed in the FIFO queue. After one of the processes leave the critical section, a processes with the most priority will enter to the critical section. 
+Counting Semaphores is implemented in this part. This type of semaphore allows a certain number of processes to enter into a critical section simultaneously. If the maximum number of processes that are allowed to be in the critical section has been reached, the processes that are not allowed to enter will go to sleep mode and will be placed in the FIFO queue. After one of the processes leave the critical section, a processes with the most priority will enter to the critical section. 
 User-level programs can access to semaphore using folowing system calls:
 - `sem_init(i,v)`: The semaphore creates critical section in i index of the array with number v for the maximum number of processes.
 - `sem_acquire(i)`: This system call is used when a process wants to enter the critical section.

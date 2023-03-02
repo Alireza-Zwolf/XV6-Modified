@@ -73,6 +73,7 @@ rank = (Priority * PriorityRatio) + (ArrivalTime * ArrivalTimeRatio) + (Executed
 rank = (Priority * PriorityRatio) + (ArrivalTime * ArrivalTimeRatio) + (ExecutedCycle * ExecutedCycleRatio)
 ```
 - `procs_status` system call prints a list of all processes with their *pid,state,queue_level,arrival_time,number_of_lottery_tickets,coefficient,rank & number_of_cycles*.
+
 ***note:*** to reach better test results, you can run `foo&` command befor calling this system call.*foo* is a user-level program that creats several number of processes that do *CPU Intensive* jobs.
 
 ## Phase4: Synchronization

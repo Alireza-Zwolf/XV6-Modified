@@ -1,5 +1,5 @@
-# OS-Lab
-A modified [xv6 operating system](https://github.com/mit-pdos/xv6-public) with several extra features. xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix Version 6 (v6).
+# XV6-Modified
+A modified [xv6 operating system](https://github.com/mit-pdos/xv6-public) with several extra features. xv6 is a re-implementation of Dennis Ritchie's and Ken Thompson's Unix Version 6 (v6). This repository contains the projects of the operating systems laboratory course.
 
 - [New Features](#phase1-introduction-to-xv6)
     - [Phase1: Introduction to xv6](#phase1-introduction-to-xv6) 

@@ -92,7 +92,7 @@ The challenge is to avoid deadlocks and resource starvation, while ensuring that
 
 ## How to use?
 We recommend you to use a virtual environment on the linux to setup the xv6, like QEMU. Follow these steps to run this repo using QEMU:
-- navigate to the desire phase of the project
+- navigate to the desired phase of the project
 - open the terminal
 - run the following command:
 ```text
